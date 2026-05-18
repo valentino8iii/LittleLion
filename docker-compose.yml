@@ -1,0 +1,29 @@
+services:
+  littlelion-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: littlelion-api
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      # Persist user progress data
+      - littlelion-data:/app/Data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/lessons"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  littlelion-data:

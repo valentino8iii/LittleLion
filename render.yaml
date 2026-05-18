@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: littlelion-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/lessons
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
