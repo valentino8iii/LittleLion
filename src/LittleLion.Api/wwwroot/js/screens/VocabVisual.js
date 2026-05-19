@@ -8,8 +8,18 @@ import { el } from '../core/DomHelpers.js';
  *   const visual = createVocabVisual(item, mediaService);
  *   tileElement.appendChild(visual);
  */
+
+const SIZE_CLASSES = {
+  small:  'w-16 h-16 text-4xl',
+  medium: 'w-24 h-24 text-5xl',
+  large:  'w-32 h-32 text-6xl',
+};
+
 export function createVocabVisual(item, mediaService, { size = 'medium' } = {}) {
-  const wrapper = el('span', { class: `vocab-visual vocab-visual--${size}` });
+  const sizeClass = SIZE_CLASSES[size] ?? SIZE_CLASSES.medium;
+  const wrapper = el('span', {
+    class: `flex items-center justify-center ${sizeClass} select-none`,
+  });
 
   const imageUrl = mediaService.getImageUrl(item);
   if (!imageUrl) {
@@ -23,7 +33,7 @@ export function createVocabVisual(item, mediaService, { size = 'medium' } = {}) 
   wrapper.textContent = item.emoji;
 
   const img = el('img', {
-    class: 'vocab-visual__img',
+    class: 'w-full h-full object-contain',
     src: imageUrl,
     alt: item.word,
     loading: 'eager',
@@ -34,7 +44,6 @@ export function createVocabVisual(item, mediaService, { size = 'medium' } = {}) 
   img.addEventListener('load', () => {
     wrapper.textContent = '';
     wrapper.appendChild(img);
-    wrapper.classList.add('vocab-visual--ready');
   });
   img.addEventListener('error', () => {
     // Leave the emoji fallback visible - nothing to do.

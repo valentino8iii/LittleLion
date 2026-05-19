@@ -15,14 +15,14 @@ import { el } from '../core/DomHelpers.js';
  * without rebuilding the DOM.
  */
 export function createTopBar({ onBack, onHome }) {
-  const fill = el('div', { class: 'topbar__progress-fill' });
-  const starsLabel = el('span', {}, ['0']);
+  const fill = el('div', { class: 'h-full bg-brand-yellow rounded-full transition-all duration-500' });
+  const starsLabel = el('span', { class: 'font-bold text-lg text-ink' }, ['0']);
 
   const children = [];
 
   if (onBack) {
     children.push(el('button', {
-      class: 'topbar__btn topbar__back',
+      class: 'w-10 h-10 flex items-center justify-center bg-white/80 rounded-full shadow-soft text-xl font-bold hover:bg-white active:scale-95 transition-all shrink-0',
       'aria-label': 'Back to game picker',
       onclick: onBack,
     }, ['←']));
@@ -30,15 +30,17 @@ export function createTopBar({ onBack, onHome }) {
 
   children.push(
     el('button', {
-      class: 'topbar__btn topbar__home',
+      class: 'w-10 h-10 flex items-center justify-center bg-white/80 rounded-full shadow-soft text-xl hover:bg-white active:scale-95 transition-all shrink-0',
       'aria-label': 'Home',
       onclick: onHome,
     }, ['🏠']),
-    el('div', { class: 'topbar__progress' }, [fill]),
-    el('div', { class: 'topbar__stars' }, ['⭐', starsLabel]),
+    el('div', { class: 'flex-1 mx-3 h-3 bg-white/60 rounded-full overflow-hidden shadow-inner' }, [fill]),
+    el('div', { class: 'flex items-center gap-1 bg-white/80 px-3 py-1 rounded-full shadow-soft shrink-0' }, ['⭐', starsLabel]),
   );
 
-  const element = el('div', { class: 'topbar' }, children);
+  const element = el('div', {
+    class: 'sticky top-0 z-30 flex items-center gap-2 px-4 py-3 bg-white/80 backdrop-blur-md border-b border-white/50 shrink-0',
+  }, children);
 
   function update({ progress, stars }) {
     if (progress != null) fill.style.width = `${Math.min(100, Math.max(0, progress * 100))}%`;

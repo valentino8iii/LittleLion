@@ -97,7 +97,7 @@ export class BaseGame extends Component {
     // Scene placeholder - actual theme injected in onMount once lesson loads
     this.sceneContainer = el('div', { class: 'absolute inset-0 z-0' });
 
-    return el('div', { class: 'w-full min-h-screen relative overflow-hidden flex flex-col bg-brand-lightBlue' }, [
+    return el('div', { class: 'screen flex flex-col' }, [
       this.sceneContainer,
       this.topBar.element,
       this.bodyContainer,

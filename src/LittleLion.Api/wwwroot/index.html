@@ -139,10 +139,441 @@
     button {
       @apply cursor-pointer outline-none;
     }
+
+    /* Scene Backgrounds and Animations */
+    :root {
+      --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --font-display: 'Fredoka', system-ui, sans-serif;
+    }
+    
+    .scene {
+      position: absolute;
+      inset: 64px 0 0 0;       /* leave room for top bar */
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      transition: opacity 0.4s var(--ease-soft);
+    }
+
+    /* Game body must float above the scene */
+    .screen.game .game__body,
+    .balloon-game-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* -------- Jungle (animals) -------- */
+    .scene--jungle {
+      background: linear-gradient(to bottom, #bef3b8 0%, #7ed17a 100%);
+    }
+    .scene__leaf {
+      position: absolute;
+      font-size: 48px;
+      opacity: 0.45;
+      filter: drop-shadow(0 4px 2px rgba(0, 100, 0, 0.15));
+    }
+    .scene__leaf--1 { top: 6%;  left: -4%;   animation: leaf-sway  4.2s ease-in-out infinite; }
+    .scene__leaf--2 { top: 18%; right: -2%;  animation: leaf-sway2 5.6s ease-in-out infinite; }
+    .scene__leaf--3 { bottom: 6%; left: 10%; animation: leaf-sway  6.1s ease-in-out infinite; }
+    .scene__leaf--4 { bottom: 2%; right: 4%; font-size: 64px; animation: leaf-sway2 7.0s ease-in-out infinite; }
+
+    @keyframes leaf-sway {
+      0%, 100% { transform: rotate(-6deg); }
+      50%      { transform: rotate(6deg); }
+    }
+    @keyframes leaf-sway2 {
+      0%, 100% { transform: rotate(8deg) translateY(0); }
+      50%      { transform: rotate(-4deg) translateY(-4px); }
+    }
+
+    /* -------- Road (vehicles) -------- */
+    .scene--road {
+      background: linear-gradient(to bottom, #87ceeb 0%, #b8d4e8 60%, #c8a678 100%);
+    }
+    .scene__sun {
+      position: absolute;
+      top: 8%; right: 12%;
+      font-size: 54px;
+      animation: sun-spin 22s linear infinite;
+    }
+    .scene__cloud {
+      position: absolute;
+      font-size: 44px;
+      opacity: 0.7;
+    }
+    .scene--road .scene__cloud--1 { top: 12%; animation: cloud-drift 28s linear infinite; }
+    .scene--road .scene__cloud--2 { top: 24%; animation: cloud-drift 36s linear infinite; animation-delay: -10s; }
+    .scene__road {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 14%;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.8) 0 22px,
+          transparent 22px 52px
+        ),
+        #5a4a3a;
+      background-position: 0 50%, 0 0;
+      background-size: 52px 6px, 100% 100%;
+      background-repeat: repeat-x, no-repeat;
+      animation: road-move 1.5s linear infinite;
+    }
+    @keyframes road-move {
+      from { background-position: 0 50%, 0 0; }
+      to   { background-position: -52px 50%, 0 0; }
+    }
+    @keyframes sun-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes cloud-drift {
+      0%   { transform: translateX(-20vw); }
+      100% { transform: translateX(120vw); }
+    }
+
+    /* -------- Sky (weather) -------- */
+    .scene--sky {
+      background: linear-gradient(to bottom, #ffd6e0 0%, #c9eaff 50%, #e3f4ff 100%);
+    }
+    .scene--sky .scene__cloud--1 { top: 8%;  font-size: 48px; animation: cloud-drift 30s linear infinite; }
+    .scene--sky .scene__cloud--2 { top: 22%; font-size: 40px; animation: cloud-drift 40s linear infinite; animation-delay: -15s; }
+    .scene--sky .scene__cloud--3 { top: 38%; font-size: 52px; animation: cloud-drift 34s linear infinite; animation-delay: -22s; }
+    .scene__star {
+      position: absolute;
+      font-size: 22px;
+      opacity: 0.75;
+      animation: twinkle 2.4s ease-in-out infinite;
+    }
+    .scene__star--1 { top: 8%;  left: 12%; }
+    .scene__star--2 { top: 20%; right: 8%; animation-delay: 1.2s; }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(0.85); }
+      50%      { opacity: 1;   transform: scale(1.15); }
+    }
+
+    /* -------- Orchard (fruits/food) -------- */
+    .scene--orchard {
+      background: linear-gradient(to bottom, #fff4cc 0%, #ffd9a8 100%);
+    }
+    .scene--orchard .scene__leaf--1 { top: 6%; right: 6%; font-size: 54px; animation: leaf-sway 5s ease-in-out infinite; }
+    .scene__petal {
+      position: absolute;
+      font-size: 26px;
+      opacity: 0.8;
+      animation: petal-fall 8s linear infinite;
+    }
+    .scene__petal--1 { left: 14%; animation-delay: 0s; }
+    .scene__petal--2 { left: 46%; animation-delay: -3s; }
+    .scene__petal--3 { left: 78%; animation-delay: -5s; }
+    @keyframes petal-fall {
+      0%   { transform: translateY(-10vh) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.8; }
+      90%  { opacity: 0.8; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* -------- Rainbow (colors) -------- */
+    .scene--rainbow {
+      background:
+        linear-gradient(180deg,
+          #ffd6d6 0%,
+          #ffe9c2 16%,
+          #fff7c2 32%,
+          #d3f0cc 48%,
+          #cce3ff 64%,
+          #d8c8ff 80%,
+          #f3c8ff 100%);
+    }
+    .scene__bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.2));
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+      animation: bubble-float 9s ease-in-out infinite;
+    }
+    .scene__bubble--1 { width: 64px;  height: 64px;  top: 12%; left: 8%;  }
+    .scene__bubble--2 { width: 48px;  height: 48px;  top: 30%; right: 14%; animation-delay: -2s; }
+    .scene__bubble--3 { width: 80px;  height: 80px;  bottom: 18%; left: 18%; animation-delay: -4s; }
+    .scene__bubble--4 { width: 40px;  height: 40px;  bottom: 8%;  right: 10%; animation-delay: -6s; }
+    @keyframes bubble-float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-14px); }
+    }
+
+    /* -------- Playroom (toys) -------- */
+    .scene--playroom {
+      background: linear-gradient(135deg, #ffe5f1 0%, #fff4d6 100%);
+    }
+    .scene__heart {
+      position: absolute;
+      font-size: 30px;
+      opacity: 0.65;
+      animation: heart-float 4.5s ease-in-out infinite;
+    }
+    .scene__heart--1 { top: 10%; left: 10%; }
+    .scene__heart--2 { top: 30%; right: 14%; animation-delay: -1.5s; }
+    .scene__heart--3 { bottom: 14%; left: 20%; animation-delay: -3s; }
+    @keyframes heart-float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-10px) scale(1.1); }
+    }
+
+    /* -------- Closet (clothes) -------- */
+    .scene--closet {
+      background: linear-gradient(135deg, #d8e8ff 0%, #e8d8ff 100%);
+    }
+    .scene__sparkle {
+      position: absolute;
+      font-size: 22px;
+      animation: twinkle 1.8s ease-in-out infinite;
+    }
+    .scene__sparkle--1 { top: 12%; left: 14%; }
+    .scene__sparkle--2 { top: 28%; right: 12%; animation-delay: 0.6s; }
+    .scene__sparkle--3 { bottom: 18%; left: 22%; animation-delay: 1.2s; }
+
+    /* --- Family: warm cozy home, soft orange glow, houses + hearts --- */
+    .scene--home-warm {
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(255, 223, 170, 0.6), transparent 60%),
+        linear-gradient(180deg, #FFF8E7 0%, #FFE4C4 100%);
+    }
+    .scene__house {
+      position: absolute;
+      font-size: 56px;
+      opacity: 0.55;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.08));
+      animation: float-gentle 6s ease-in-out infinite;
+    }
+    .scene__house--1 { top: 16%; left: 8%; }
+    .scene__house--2 { bottom: 22%; right: 10%; animation-delay: -3s; font-size: 48px; }
+
+    /* --- Food: kitchen, warm yellow, floating utensils + steam --- */
+    .scene--kitchen {
+      background: linear-gradient(180deg, #FFF9DB 0%, #FFE8A3 100%);
+    }
+    .scene__utensil {
+      position: absolute;
+      font-size: 44px;
+      opacity: 0.4;
+      animation: float-gentle 5s ease-in-out infinite;
+    }
+    .scene__utensil--1 { top: 14%; left: 10%; transform: rotate(-15deg); }
+    .scene__utensil--2 { top: 28%; right: 12%; animation-delay: -2s; transform: rotate(20deg); }
+    .scene__utensil--3 { bottom: 18%; left: 14%; animation-delay: -3.5s; transform: rotate(5deg); }
+    .scene__steam {
+      position: absolute;
+      font-size: 40px;
+      opacity: 0.3;
+      top: 8%; right: 28%;
+      animation: steam-rise 3.5s ease-in-out infinite;
+    }
+    @keyframes steam-rise {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+      50%      { transform: translateY(-12px) scale(1.15); opacity: 0.5; }
+    }
+
+    /* --- Numbers: soft lavender, floating digits at low opacity --- */
+    .scene--counting {
+      background: linear-gradient(180deg, #F3E8FF 0%, #DDD6FE 100%);
+    }
+    .scene__digit {
+      position: absolute;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 96px;
+      color: rgba(139, 92, 246, 0.22);
+      animation: float-gentle 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .scene__digit--1 { top: 8%;  left: 6%;   animation-delay: 0s; }
+    .scene__digit--2 { top: 22%; right: 8%;  animation-delay: -2s; }
+    .scene__digit--3 { top: 40%; left: 20%;  animation-delay: -4s; font-size: 72px; }
+    .scene__digit--4 { bottom: 22%; right: 14%; animation-delay: -1s; font-size: 80px; }
+    .scene__digit--5 { bottom: 6%;  left: 10%; animation-delay: -3s; font-size: 64px; }
+
+    /* --- Toys: bright pastel with rotating block shapes at corners --- */
+    .scene--playroom-bright {
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.35), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(173, 216, 230, 0.35), transparent 40%),
+        linear-gradient(180deg, #FFF5F7 0%, #E0F2FE 100%);
+    }
+    .scene__block {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      opacity: 0.5;
+      animation: block-spin 12s linear infinite;
+    }
+    .scene__block--1 { top: 10%; left: 8%;  background: #FFD93D; animation-delay: 0s; }
+    .scene__block--2 { top: 20%; right: 8%; background: #FF6B9D; animation-delay: -3s; border-radius: 50%; }
+    .scene__block--3 { bottom: 22%; left: 12%; background: #4ECDC4; animation-delay: -6s; }
+    .scene__block--4 { bottom: 10%; right: 14%; background: #A78BFA; animation-delay: -9s; border-radius: 50%; }
+    @keyframes block-spin {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* --- Actions: motion, horizontal speed-lines radiating --- */
+    .scene--motion {
+      background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%);
+      overflow: hidden;
+    }
+    .scene__speedline {
+      position: absolute;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(244, 63, 94, 0.4), transparent);
+      border-radius: 2px;
+      animation: speedline-slide 1.8s ease-in-out infinite;
+    }
+    .scene__speedline--1 { top: 15%; left: -40%; width: 40%; animation-delay: 0s; }
+    .scene__speedline--2 { top: 32%; left: -40%; width: 50%; animation-delay: -0.4s; }
+    .scene__speedline--3 { top: 55%; left: -40%; width: 35%; animation-delay: -0.9s; }
+    .scene__speedline--4 { top: 72%; left: -40%; width: 45%; animation-delay: -1.2s; }
+    .scene__speedline--5 { top: 88%; left: -40%; width: 38%; animation-delay: -1.6s; }
+    @keyframes speedline-slide {
+      0%   { transform: translateX(0);    opacity: 0; }
+      30%  { opacity: 1; }
+      100% { transform: translateX(400%); opacity: 0; }
+    }
+
+    /* --- Feelings: pink/red gradient with floating hearts --- */
+    .scene--heart {
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(251, 207, 232, 0.6), transparent 60%),
+        linear-gradient(180deg, #FFE4E6 0%, #FCCFE9 100%);
+    }
+    .scene--heart .scene__heart {
+      position: absolute;
+      font-size: 44px;
+      animation: heart-pulse 3s ease-in-out infinite;
+    }
+    .scene--heart .scene__heart--1 { top: 12%; left: 10%; animation-delay: 0s; }
+    .scene--heart .scene__heart--2 { top: 28%; right: 12%; animation-delay: -0.8s; font-size: 36px; }
+    .scene--heart .scene__heart--3 { bottom: 22%; left: 16%; animation-delay: -1.5s; }
+    .scene--heart .scene__heart--4 { bottom: 8%; right: 18%; animation-delay: -2.2s; font-size: 40px; }
+    @keyframes heart-pulse {
+      0%, 100% { transform: scale(1)    rotate(-4deg); opacity: 0.7; }
+      50%      { transform: scale(1.15) rotate(4deg);  opacity: 1; }
+    }
+
+    /* --- House: cool blue with architectural grid lines --- */
+    .scene--blueprint {
+      background: linear-gradient(180deg, #DBEAFE 0%, #BFDBFE 100%);
+    }
+    .scene__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(59, 130, 246, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(59, 130, 246, 0.15) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+    }
+    .scene--blueprint .scene__house--1 {
+      top: 20%; right: 12%; font-size: 72px; opacity: 0.35;
+      animation: float-gentle 7s ease-in-out infinite;
+    }
+
+    /* --- Nature: green forest, trees at bottom, leaves floating --- */
+    .scene--forest {
+      background: linear-gradient(180deg, #D1FAE5 0%, #A7F3D0 60%, #86EFAC 100%);
+    }
+    .scene__tree {
+      position: absolute;
+      bottom: -8px;
+      font-size: 84px;
+      opacity: 0.6;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
+    }
+    .scene__tree--1 { left: -4%; font-size: 96px; }
+    .scene__tree--2 { left: 30%; font-size: 72px; opacity: 0.5; }
+    .scene__tree--3 { right: -2%; font-size: 88px; }
+    .scene--forest .scene__leaf {
+      position: absolute;
+      font-size: 32px;
+      opacity: 0.6;
+    }
+    .scene--forest .scene__leaf--1 { top: 14%; left: 20%; animation: leaf-sway  5s ease-in-out infinite; }
+    .scene--forest .scene__leaf--2 { top: 28%; right: 16%; animation: leaf-sway2 6s ease-in-out infinite; }
+
+    /* --- Bugs: garden, bright green, scattered flowers --- */
+    .scene--garden {
+      background:
+        radial-gradient(circle at 30% 20%, rgba(253, 224, 71, 0.3), transparent 40%),
+        linear-gradient(180deg, #ECFCCB 0%, #BBF7D0 100%);
+    }
+    .scene--garden .scene__petal {
+      position: absolute;
+      font-size: 40px;
+      opacity: 0.75;
+      animation: leaf-sway 4.5s ease-in-out infinite;
+    }
+    .scene--garden .scene__petal--1 { top: 10%; left: 8%;  animation-delay: 0s; }
+    .scene--garden .scene__petal--2 { top: 30%; right: 10%; animation-delay: -1.5s; font-size: 48px; }
+    .scene--garden .scene__petal--3 { bottom: 12%; left: 14%; animation-delay: -3s; font-size: 36px; }
+    .scene--garden .scene__leaf {
+      position: absolute;
+      bottom: 6%;
+      right: 16%;
+      font-size: 38px;
+      opacity: 0.7;
+      animation: leaf-sway2 5.2s ease-in-out infinite;
+    }
+
+    /* --- Sea: deep blue with wave curves + rising bubbles --- */
+    .scene--ocean {
+      background: linear-gradient(180deg, #93C5FD 0%, #3B82F6 60%, #1E40AF 100%);
+      overflow: hidden;
+    }
+    .scene__wave {
+      position: absolute;
+      left: -10%;
+      width: 120%;
+      height: 80px;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: wave-drift 8s ease-in-out infinite;
+    }
+    .scene__wave--1 { top: 30%; background: rgba(255, 255, 255, 0.4); animation-delay: 0s; }
+    .scene__wave--2 { top: 55%; background: rgba(255, 255, 255, 0.3); animation-delay: -4s; }
+    @keyframes wave-drift {
+      0%, 100% { transform: translateX(-4%) scaleY(0.8); }
+      50%      { transform: translateX(4%)  scaleY(1.1); }
+    }
+    .scene--ocean .scene__bubble {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      animation: bubble-rise 6s ease-in infinite;
+    }
+    .scene--ocean .scene__bubble--1 { left: 15%; bottom: -10%; width: 20px; height: 20px; animation-delay: 0s; }
+    .scene--ocean .scene__bubble--2 { left: 38%; bottom: -10%; width: 32px; height: 32px; animation-delay: -2s; }
+    .scene--ocean .scene__bubble--3 { left: 62%; bottom: -10%; width: 16px; height: 16px; animation-delay: -3.5s; }
+    .scene--ocean .scene__bubble--4 { left: 78%; bottom: -10%; width: 28px; height: 28px; animation-delay: -1.5s; }
+    .scene--ocean .scene__bubble--5 { left: 90%; bottom: -10%; width: 22px; height: 22px; animation-delay: -4.5s; }
+    @keyframes bubble-rise {
+      0%   { transform: translateY(0)     scale(0.5); opacity: 0; }
+      20%  { opacity: 0.7; }
+      100% { transform: translateY(-500px) scale(1); opacity: 0; }
+    }
+
+    /* Shared gentle float animation used by several new scenes */
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0)    rotate(0deg); }
+      50%      { transform: translateY(-8px) rotate(-2deg); }
+    }
   </style>
 </head>
 <body>
-  <div id="app" class="w-full h-full md:rounded-3xl md:shadow-2xl overflow-hidden relative bg-gradient-to-br from-cream via-white to-[#EEF4FF] border-0 md:border-8 md:border-white/50 flex flex-col max-w-[1200px] max-h-[900px] mx-auto" aria-live="polite"></div>
+  <div id="app" class="w-full h-full md:rounded-3xl md:shadow-2xl overflow-hidden relative bg-gradient-to-br from-cream via-white to-[#EEF4FF] border-4 md:border-8 border-white/50 flex flex-col max-w-[1200px] max-h-[900px] mx-auto" aria-live="polite"></div>
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>
