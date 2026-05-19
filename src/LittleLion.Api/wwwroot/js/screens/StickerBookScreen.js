@@ -16,22 +16,29 @@ const CATEGORY_LABELS = {
 export class StickerBookScreen extends Component {
   render() {
     const backBtn = el('button', {
-      class: 'topbar__home',
+      class: 'flex items-center justify-center gap-3 bg-brand-blue text-white rounded-full px-8 py-4 shadow-card font-bold text-xl hover:-translate-y-1 active:translate-y-1 transition-all outline-none focus:ring-4 focus:ring-brand-blue/50',
       'aria-label': 'Back',
       onclick: () => this.context.router.navigate('home'),
-    }, ['←']);
+    }, [
+      el('span', { class: 'text-2xl' }, ['←']),
+      el('span', {}, ['Back to Home']),
+    ]);
 
-    this._content = el('div', { class: 'sticker-book' });
+    const bottomNav = el('div', {
+      class: 'shrink-0 p-4 sm:p-6 bg-white/90 backdrop-blur-md border-t-4 border-gray-100 flex justify-center z-10 relative',
+    }, [backBtn]);
 
-    return el('div', { class: 'screen home' }, [
-      el('div', { class: 'home__header' }, [
-        backBtn,
-        el('div', { style: { flex: 1 } }, [
-          el('h1', { class: 'home__title', style: { fontSize: '32px' } }, ['Sticker Book']),
-          el('p',  { class: 'home__subtitle' }, [this._summaryLine()]),
+    this._content = el('div', { class: 'flex flex-col gap-8' });
+
+    return el('div', { class: 'screen absolute inset-0 flex flex-col overflow-hidden' }, [
+      el('div', { class: 'flex-1 overflow-y-auto p-4 sm:p-6 pb-8' }, [
+        el('div', { class: 'mb-8 text-center' }, [
+          el('h1', { class: 'text-4xl sm:text-5xl font-display font-bold text-brand-blue text-shadow-strong' }, ['Sticker Book']),
+          el('p',  { class: 'text-xl text-ink-soft font-medium mt-2 summary-subtitle' }, [this._summaryLine()]),
         ]),
+        this._content,
       ]),
-      this._content,
+      bottomNav,
     ]);
   }
 
@@ -63,10 +70,10 @@ export class StickerBookScreen extends Component {
       if (items.length === 0) continue;
 
       this._content.appendChild(
-        el('h2', { class: 'sticker-book__section-title' }, [CATEGORY_LABELS[category]])
+        el('h2', { class: 'text-2xl font-bold text-brand-purple mb-4 border-b-2 border-brand-purple/20 pb-2' }, [CATEGORY_LABELS[category]])
       );
 
-      const grid = el('div', { class: 'sticker-book__grid' });
+      const grid = el('div', { class: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4' });
       items.forEach((reward, i) => {
         const unlocked = progress.hasUnlocked(reward.id);
         grid.appendChild(this._renderCard(reward, unlocked, i));
@@ -75,22 +82,23 @@ export class StickerBookScreen extends Component {
     }
 
     // Update header summary now that we have real counts
-    const subtitle = this._content.parentElement?.querySelector('.home__subtitle');
+    const subtitle = this._content.parentElement?.querySelector('.summary-subtitle');
     if (subtitle) subtitle.textContent = this._summaryLine();
   }
 
   _renderCard(reward, unlocked, index) {
-    const classes = ['sticker-card'];
-    if (!unlocked) classes.push('sticker-card--locked');
+    const baseClass = 'p-4 rounded-3xl flex flex-col items-center text-center transition-transform hover:-translate-y-1';
+    const unlockedClass = 'bg-white/90 shadow-card';
+    const lockedClass = 'opacity-60 grayscale bg-gray-100 shadow-soft';
 
     return el('div', {
-      class: classes.join(' '),
+      class: `${baseClass} ${unlocked ? unlockedClass : lockedClass}`,
       style: { animationDelay: `${index * 40}ms` },
       title: unlocked ? reward.name : this._lockHint(reward),
     }, [
-      el('div', { class: 'sticker-card__emoji' }, [unlocked ? reward.emoji : '🔒']),
-      el('div', { class: 'sticker-card__name' }, [reward.name]),
-      el('div', { class: 'sticker-card__hint' },
+      el('div', { class: 'text-5xl mb-3 bg-gray-50 rounded-2xl w-20 h-20 flex items-center justify-center shadow-inner' }, [unlocked ? reward.emoji : '🔒']),
+      el('div', { class: 'font-bold text-ink' }, [reward.name]),
+      el('div', { class: 'text-sm text-ink-soft mt-1' },
         unlocked ? ['Unlocked!'] : [this._lockHint(reward)]),
     ]);
   }

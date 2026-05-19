@@ -25,3 +25,6 @@ Thumbs.db
 
 ## Progress data (runtime-generated, not checked in)
 src/LittleLion.Api/Data/progress.json
+src/publish
+
+.agent

@@ -13,29 +13,29 @@ export class HomeScreen extends Component {
 
     this._starsLabel = el('span', {}, [String(progress.totalStars)]);
     this._streakLabel = this._buildStreak(progress.streakDays);
-    this._stickerCount = el('span', { class: 'home__sticker-link__count' }, [
-      String(this._countValidUnlocks()),
-    ]);
-    this._lessonGrid  = el('div', { class: 'lesson-grid' });
+    this._stickerCount = el('span', {
+      class: 'absolute -top-2.5 -right-2.5 min-w-[18px] h-[18px] px-1 bg-brand-pink text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none',
+    }, [String(this._countValidUnlocks())]);
+    this._lessonGrid = el('div', { class: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-24' });
     this._scorePillByLesson = new Map();
 
     // Refresh on either progress OR rewards changing (rewards refresh is async)
     this.listen('progress:changed', () => this._refreshHeader());
 
-    const root = el('div', { class: 'screen home' }, [
+    const root = el('div', { class: 'screen absolute inset-0 flex flex-col p-4 sm:p-6 overflow-y-auto' }, [
       this._buildHeader(),
       this._buildHeroBanner(),
       this._lessonGrid,
-      el('div', { class: 'home__footer', style: { display: 'flex', justifyContent: 'center' } }, [
-        el('button', {
-          class: 'home__sticker-link',
-          onclick: () => this.context.router.navigate('stickerBook'),
-        }, [
-          '📖',
-          'Sticker Book',
-          this._stickerCount,
-        ]),
-      ]),
+      // el('div', { class: 'fixed bottom-6 left-0 right-0 flex justify-center pointer-events-none z-50' }, [
+      //   el('button', {
+      //     class: 'pointer-events-auto bg-brand-pink text-white px-8 py-4 rounded-full font-bold text-xl shadow-btn active:shadow-none active:translate-y-1 transition-all flex items-center gap-3 border-4 border-white',
+      //     onclick: () => this.context.router.navigate('stickerBook'),
+      //   }, [
+      //     '📖',
+      //     'Sticker Book',
+      //     this._stickerCount,
+      //   ]),
+      // ]),
     ]);
 
     return root;
@@ -80,11 +80,11 @@ export class HomeScreen extends Component {
     const best = progress.getBestStars(lesson.id, currentDifficulty);
 
     // Score pill - updates when global difficulty changes
-    const scorePill = el('div', { class: 'lesson-card__score' },
+    const scorePill = el('div', { class: 'absolute top-3 right-3 bg-white/90 text-ink px-3 py-1 rounded-full text-sm font-bold shadow-sm' },
       best > 0 ? [`⭐ ${best}`] : ['✨']);
 
     const card = el('button', {
-      class: 'lesson-card',
+      class: 'relative p-6 rounded-3xl shadow-card transition-transform hover:-translate-y-1 active:translate-y-1 flex items-center gap-4 text-left group overflow-hidden outline-none focus:ring-4 focus:ring-white/50',
       style: {
         background: meta.color,
         animationDelay: `${index * 0.05}s`,
@@ -96,10 +96,10 @@ export class HomeScreen extends Component {
         });
       },
     }, [
-      el('div', { class: 'lesson-card__emoji' }, [meta.emoji]),
-      el('div', { class: 'lesson-card__body' }, [
-        el('div', { class: 'lesson-card__title' }, [lesson.title]),
-        el('div', { class: 'lesson-card__sub' }, [`${lesson.itemCount} words`]),
+      el('div', { class: 'text-5xl bg-white/30 p-3 rounded-2xl flex-shrink-0' }, [meta.emoji]),
+      el('div', { class: 'flex-1' }, [
+        el('div', { class: 'text-2xl font-bold text-white text-shadow-strong' }, [lesson.title]),
+        el('div', { class: 'text-white/90 font-medium' }, [`${lesson.itemCount} words`]),
       ]),
       scorePill,
     ]);
@@ -112,14 +112,23 @@ export class HomeScreen extends Component {
   }
 
   _buildHeader() {
-    return el('div', { class: 'home__header' }, [
+    return el('div', { class: 'flex justify-between items-center mb-6 shrink-0' }, [
       el('div', {}, [
-        el('h1', { class: 'home__title' }, ['Little Lion']),
-        el('p',  { class: 'home__subtitle' }, [`Let's learn English! 🦁`]),
+        el('h1', { class: 'text-4xl sm:text-5xl font-display font-bold text-brand-blue text-shadow-strong' }, ['Little Lion']),
+        el('p', { class: 'text-xl text-ink-soft font-medium mt-1' }, [`Let's learn English! 🦁`]),
       ]),
-      el('div', { class: 'home__stats' }, [
+      el('div', { class: 'flex gap-3 items-center bg-white/80 px-4 py-2 rounded-full shadow-soft font-bold text-lg' }, [
         this._streakLabel,
-        el('div', { class: 'topbar__stars' }, ['⭐', this._starsLabel]),
+        el('div', { class: 'flex items-center gap-1' }, ['⭐', this._starsLabel]),
+        el('div', { class: 'w-px h-5 bg-ink/20 mx-1' }),
+        el('button', {
+          class: 'relative flex items-center gap-1 text-brand-pink hover:scale-110 active:scale-95 transition-all',
+          title: 'Sticker Book',
+          onclick: () => this.context.router.navigate('stickerBook'),
+        }, [
+          el('span', { class: 'text-xl' }, ['🌟']),
+          // this._stickerCount,
+        ]),
       ]),
     ]);
   }
@@ -128,11 +137,11 @@ export class HomeScreen extends Component {
     this._leo = new Leo(this.context.bus, { size: 'medium' });
     this.onDispose(() => this._leo.destroy());
 
-    return el('div', { class: 'home__lesson-banner' }, [
-      el('div', { class: 'home__lesson-banner-emoji' }, [this._leo.element]),
-      el('div', { class: 'home__lesson-banner-text' }, [
-        el('strong', {}, [`Hi friend!`]),
-        el('span', {}, ['Pick a topic below to start']),
+    return el('div', { class: 'bg-white/90 rounded-3xl p-6 mb-8 shadow-card flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left shrink-0' }, [
+      el('div', { class: 'text-6xl animate-float' }, [this._leo.element]),
+      el('div', { class: 'flex-1 text-2xl text-ink' }, [
+        el('strong', { class: 'block text-3xl mb-1 text-brand-purple' }, [`Hi friend!`]),
+        el('span', { class: 'text-ink-soft' }, ['Pick a topic below to start']),
       ]),
       this._buildGlobalDifficultyPicker(),
     ]);
@@ -149,15 +158,19 @@ export class HomeScreen extends Component {
     const current = difficulty.get();
 
     const row = el('div', {
-      class: 'global-difficulty',
+      class: 'flex bg-gray-100 p-1.5 rounded-full shadow-inner',
       role: 'radiogroup',
       'aria-label': 'Difficulty',
     });
 
     ['Easy', 'Medium', 'Hard'].forEach(level => {
       const isActive = level === current;
+      const baseClass = 'px-6 py-2 rounded-full font-bold transition-colors outline-none focus:ring-2 focus:ring-brand-blue/50';
+      const activeClass = 'bg-white shadow-soft text-brand-blue';
+      const inactiveClass = 'text-gray-500 hover:bg-gray-200/50';
+
       const pill = el('button', {
-        class: `global-difficulty__pill global-difficulty__pill--${level.toLowerCase()}${isActive ? ' global-difficulty__pill--active' : ''}`,
+        class: `${baseClass} ${isActive ? activeClass : inactiveClass}`,
         type: 'button',
         role: 'radio',
         'aria-checked': String(isActive),
@@ -166,9 +179,10 @@ export class HomeScreen extends Component {
           difficulty.set(level);
 
           // Update pill visual state
-          row.querySelectorAll('.global-difficulty__pill').forEach(p =>
-            p.classList.remove('global-difficulty__pill--active'));
-          pill.classList.add('global-difficulty__pill--active');
+          row.querySelectorAll('button').forEach(p => {
+            p.className = `${baseClass} ${inactiveClass}`;
+          });
+          pill.className = `${baseClass} ${activeClass}`;
 
           // Refresh every lesson card's score pill for the new level
           this._scorePillByLesson.forEach((scorePill, lessonId) => {
@@ -184,7 +198,7 @@ export class HomeScreen extends Component {
   }
 
   _buildStreak(days) {
-    return el('div', { class: 'home__streak' }, [
+    return el('div', { class: 'flex items-center gap-1 text-brand-orange' }, [
       days > 0 ? `🔥 ${days}` : '🔥 0',
     ]);
   }
@@ -257,27 +271,27 @@ export class HomeScreen extends Component {
 // coverColor into the lesson JSON + DTO so content owns its own cover.
 const LESSON_META = {
   // Original 7
-  animals:  { emoji: '🦁', color: '#FFB84C' },
-  colors:   { emoji: '🎨', color: '#FF6B9D' },
-  fruits:   { emoji: '🍎', color: '#FF8C42' },
+  animals: { emoji: '🦁', color: '#FFB84C' },
+  colors: { emoji: '🎨', color: '#FF6B9D' },
+  fruits: { emoji: '🍎', color: '#FF8C42' },
   vehicles: { emoji: '🚗', color: '#4ECDC4' },
-  body:     { emoji: '👶', color: '#FFB3D9' },
-  clothes:  { emoji: '👕', color: '#5B9EFF' },
-  weather:  { emoji: '☀️', color: '#A78BFA' },
+  body: { emoji: '👶', color: '#FFB3D9' },
+  clothes: { emoji: '👕', color: '#5B9EFF' },
+  weather: { emoji: '☀️', color: '#A78BFA' },
 
   // 10 new lessons (colors chosen to avoid clashing with adjacent cards
   // on the home screen - the 2-column grid pairs odd/even positions
   // so we alternate warm/cool/neutral hues down the list)
-  family:   { emoji: '👨‍👩‍👧', color: '#06B6D4' },  // teal - warmth via emoji, calm via color
-  food:     { emoji: '🍕', color: '#EF4444' },  // classic pizza red
-  numbers:  { emoji: '🔢', color: '#8B5CF6' },  // violet - stands apart from rainbow
-  toys:     { emoji: '🧸', color: '#FB923C' },  // teddy orange
-  actions:  { emoji: '🏃', color: '#14B8A6' },  // teal - action/energy vibe
+  family: { emoji: '👨‍👩‍👧', color: '#06B6D4' },  // teal - warmth via emoji, calm via color
+  food: { emoji: '🍕', color: '#EF4444' },  // classic pizza red
+  numbers: { emoji: '🔢', color: '#8B5CF6' },  // violet - stands apart from rainbow
+  toys: { emoji: '🧸', color: '#FB923C' },  // teddy orange
+  actions: { emoji: '🏃', color: '#14B8A6' },  // teal - action/energy vibe
   feelings: { emoji: '💖', color: '#EC4899' },  // pink heart
-  house:    { emoji: '🏠', color: '#6366F1' },  // indigo like blueprints
-  nature:   { emoji: '🌳', color: '#16A34A' },  // forest green
-  bugs:     { emoji: '🐞', color: '#84CC16' },  // lime green
-  sea:      { emoji: '🐋', color: '#0284C7' },  // ocean deep blue
+  house: { emoji: '🏠', color: '#6366F1' },  // indigo like blueprints
+  nature: { emoji: '🌳', color: '#16A34A' },  // forest green
+  bugs: { emoji: '🐞', color: '#84CC16' },  // lime green
+  sea: { emoji: '🐋', color: '#0284C7' },  // ocean deep blue
 };
 
 const DEFAULT_META = { emoji: '📚', color: '#A78BFA' };

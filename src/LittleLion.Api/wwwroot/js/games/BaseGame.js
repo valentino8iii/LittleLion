@@ -87,17 +87,17 @@ export class BaseGame extends Component {
       onHome: () => this.context.router.navigate('home'),
     });
 
-    this.bodyContainer = el('div', { class: 'game__body' });
+    this.bodyContainer = el('div', { class: 'flex-1 relative z-10 p-6 flex flex-col items-center justify-center overflow-y-auto w-full' });
 
     // Leo watches from the bottom-left corner while the child plays
     this.leo = new Leo(this.context.bus, { size: 'small' });
     this.onDispose(() => this.leo.destroy());
-    const leoCorner = el('div', { class: 'game__leo' }, [this.leo.element]);
+    const leoCorner = el('div', { class: 'absolute bottom-4 left-4 z-20 pointer-events-none' }, [this.leo.element]);
 
     // Scene placeholder - actual theme injected in onMount once lesson loads
-    this.sceneContainer = el('div', { class: 'scene-slot' });
+    this.sceneContainer = el('div', { class: 'absolute inset-0 z-0' });
 
-    return el('div', { class: 'screen game' }, [
+    return el('div', { class: 'w-full min-h-screen relative overflow-hidden flex flex-col bg-brand-lightBlue' }, [
       this.sceneContainer,
       this.topBar.element,
       this.bodyContainer,
@@ -185,7 +185,7 @@ export class BaseGame extends Component {
       this._hintTimer = null;
     }
     if (this._hintTargetTile) {
-      this._hintTargetTile.classList.remove('tile--hint');
+      this._hintTargetTile.classList.remove('ring-8', 'ring-brand-yellow/50');
       this._hintTargetTile = null;
     }
   }
@@ -196,7 +196,7 @@ export class BaseGame extends Component {
     // Glow the correct tile + Leo points at it. Direction picked from
     // whether the tile is on the left or right half of the viewport.
     const tile = this._hintTargetTile;
-    tile.classList.add('tile--hint');
+    tile.classList.add('ring-8', 'ring-brand-yellow/50');
 
     const rect = tile.getBoundingClientRect();
     const midX = window.innerWidth / 2;

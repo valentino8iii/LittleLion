@@ -22,8 +22,7 @@ export class BalloonGame extends BaseGame {
     // Swap the default body for our balloon-specific layout class.
     // The scene background from BaseGame already covers the sky, so we
     // don't need the old balloon-sky layer any more.
-    this.bodyContainer.classList.remove('game__body');
-    this.bodyContainer.classList.add('balloon-game-body');
+    this.bodyContainer.className = 'flex-1 relative z-10 w-full overflow-hidden flex flex-col pt-8';
 
     return root;
   }
@@ -37,18 +36,17 @@ export class BalloonGame extends BaseGame {
     let locked = false;
 
     const promptBtn = el('button', {
-      class: 'sound-button',
-      style: { marginBottom: '12px' },
+      class: 'flex items-center justify-center gap-3 bg-brand-yellow text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
+      style: { marginBottom: '12px', position: 'relative', zIndex: '50' },
       onclick: () => audio.speak(target.word),
     }, [
-      el('span', { class: 'sound-button__icon', style: { background: 'var(--color-pink)' } }, ['🔊']),
+      el('span', { class: 'text-2xl', style: { background: 'var(--color-pink)' } }, ['🔊']),
       el('span', {}, [`Pop the ${target.word.toLowerCase()}!`]),
     ]);
 
     // Crowded mode shrinks balloon bodies ~20% when we have 7+ on screen
     // so they don't overlap horribly on narrow phones.
-    const fieldClass = n >= 7 ? 'balloon-field balloon-field--crowded' : 'balloon-field';
-    const field = el('div', { class: fieldClass });
+    const field = el('div', { class: 'relative flex-1 w-full h-full pointer-events-none' });
     const { media } = this.context.services;
 
     let correctBalloon = null;
@@ -63,7 +61,7 @@ export class BalloonGame extends BaseGame {
       const leftBase = n === 1 ? 50 : 8 + idx * slotWidth;
 
       const balloon = el('button', {
-        class: 'balloon',
+        class: 'absolute bottom-[-150px] w-[120px] h-[160px] pointer-events-auto cursor-pointer focus:outline-none flex flex-col items-center justify-start group transition-all duration-300',
         style: {
           left: `${leftBase + Math.random() * 2}%`,
           animationName: `balloon-rise, ${swayName}`,
@@ -78,31 +76,31 @@ export class BalloonGame extends BaseGame {
           if (item.id === target.id) {
             locked = true;
             this._spawnPartyBurst(balloon, field, item);
-            balloon.classList.add('balloon--burst');
+            balloon.classList.add('scale-150', 'opacity-0', 'pointer-events-none');
             this.context.services.sfx.play('pop');
             audio.speak(item.word);
             this.context.bus.emit('leo:cheer');
-            const praise = el('div', { class: 'balloon-feedback' }, [`POP! ${target.word}! ✨`]);
+            const praise = el('div', { class: 'absolute top-4 left-1/2 -translate-x-1/2 bg-white px-8 py-4 rounded-full shadow-card text-2xl font-bold text-brand-purple animate-toast-enter z-[150] whitespace-nowrap' }, [`POP! ${target.word}! ✨`]);
             field.appendChild(praise);
             this.completeRound();
           } else {
-            balloon.classList.add('balloon--popped');
+            balloon.classList.add('animate-wiggle', 'scale-90', 'opacity-50');
             this.context.services.sfx.play('buzz');
             this.context.bus.emit('leo:sad');
             this.noteWrong();
-            setTimeout(() => balloon.classList.remove('balloon--popped'), 400);
+            setTimeout(() => balloon.classList.remove('animate-wiggle', 'scale-90', 'opacity-50'), 400);
           }
         },
       }, [
         el('div', {
-          class: 'balloon__body',
+          class: 'w-[110px] h-[130px] rounded-[50%_50%_50%_50%/60%_60%_40%_40%] shadow-[inset_-10px_-10px_20px_rgba(0,0,0,0.1),inset_10px_10px_20px_rgba(255,255,255,0.4)] flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-active:scale-95',
           style: {
             background: `radial-gradient(circle at 30% 30%, ${this.tileBackground(item)}dd, ${this.tileBackground(item)})`,
             color: item.color,
           },
         }, [createVocabVisual(item, media, { size: 'small' })]),
-        el('div', { class: 'balloon__tie', style: { color: this.tileBackground(item) } }),
-        el('div', { class: 'balloon__string' }),
+        el('div', { class: 'w-0 h-0 border-l-[10px] border-r-[10px] border-b-[15px] border-l-transparent border-r-transparent border-b-current -mt-[5px]', style: { color: this.tileBackground(item) } }),
+        el('div', { class: 'w-[2px] h-[80px] bg-white/50 -mt-[2px]' }),
       ]);
       if (item.id === target.id) correctBalloon = balloon;
       field.appendChild(balloon);
@@ -141,7 +139,7 @@ export class BalloonGame extends BaseGame {
 
     // 1. Flash - bright white radial burst, the "pop" moment
     const flash = el('div', {
-      class: 'burst-flash',
+      class: 'absolute w-[200px] h-[200px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle_at_center,white_0%,transparent_60%)] z-[100] animate-flash pointer-events-none',
       style: { left: `${cx}px`, top: `${cy}px` },
     });
     fieldEl.appendChild(flash);
@@ -149,7 +147,7 @@ export class BalloonGame extends BaseGame {
 
     // 2. Shockwave ring in the balloon's color - expands outward, fades
     const ring = el('div', {
-      class: 'burst-ring',
+      class: 'absolute w-[80px] h-[80px] -translate-x-1/2 -translate-y-1/2 border-4 rounded-full z-[99] animate-ring-expand pointer-events-none',
       style: {
         left: `${cx}px`,
         top:  `${cy}px`,
@@ -163,7 +161,7 @@ export class BalloonGame extends BaseGame {
     // out of the balloon, wiggles slightly, then fades. Visually links
     // the pop action with the thing the child just learned.
     const emojiFloat = el('div', {
-      class: 'burst-emoji-float',
+      class: 'absolute text-5xl -translate-x-1/2 -translate-y-1/2 z-[101] animate-float-up pointer-events-none drop-shadow-md',
       style: { left: `${cx}px`, top: `${cy}px` },
     }, [item.emoji ?? '✨']);
     fieldEl.appendChild(emojiFloat);
@@ -186,8 +184,13 @@ export class BalloonGame extends BaseGame {
       const rotate = (Math.random() - 0.5) * 720;
       const shape = SHAPES[i % SHAPES.length];
 
+      const shapeClasses = shape === 'circle' ? 'rounded-full bg-current' :
+                           shape === 'rect' ? 'w-2 h-6 bg-current' :
+                           shape === 'star' ? 'text-2xl font-bold flex items-center justify-center' :
+                           'text-xl font-bold flex items-center justify-center';
+
       const piece = el('div', {
-        class: `burst-piece burst-piece--${shape}`,
+        class: `absolute w-3 h-3 -translate-x-1/2 -translate-y-1/2 z-[98] opacity-0 animate-[streamer_1.2s_cubic-bezier(0.1,1,0.2,1)_forwards] pointer-events-none ${shapeClasses}`,
         style: {
           left: `${cx}px`,
           top:  `${cy}px`,

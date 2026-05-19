@@ -57,14 +57,14 @@ export class MemoryGame extends BaseGame {
 
     const cardEls = deck.map((cardDef) => {
       const card = el('button', {
-        class: 'memory-card',
+        class: 'relative w-full aspect-[3/4] cursor-pointer [perspective:1000px] transition-all duration-300',
         type: 'button',
         'aria-label': 'Hidden card',
         onclick: () => handleTap(card, cardDef),
       }, [
-        el('div', { class: 'memory-card__inner' }, [
-          el('div', { class: 'memory-card__back' }, ['?']),
-          el('div', { class: 'memory-card__front' }, [
+        el('div', { class: 'memory-card-inner relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d]' }, [
+          el('div', { class: 'absolute inset-0 w-full h-full rounded-3xl shadow-card [backface-visibility:hidden] flex flex-col items-center justify-center p-4 bg-brand-blue text-white text-6xl font-bold' }, ['?']),
+          el('div', { class: 'absolute inset-0 w-full h-full rounded-3xl shadow-card [backface-visibility:hidden] flex flex-col items-center justify-center p-4 bg-white [transform:rotateY(180deg)] border-4 border-brand-yellow' }, [
             createVocabVisual(cardDef.item, media, { size: 'small' }),
           ]),
         ]),
@@ -74,11 +74,12 @@ export class MemoryGame extends BaseGame {
 
     const handleTap = (cardEl, cardDef) => {
       if (locked) return;
-      if (matchedItemIds.has(cardDef.item.id)) return;  // already solved pair
-      if (cardEl.classList.contains('memory-card--flipped')) return;  // this card already up
+      if (matchedItemIds.has(cardDef.item.id)) return;
+      if (cardEl.dataset.flipped) return;
 
       // Flip it open
-      cardEl.classList.add('memory-card--flipped');
+      cardEl.dataset.flipped = 'true';
+      cardEl.querySelector('.memory-card-inner').classList.add('[transform:rotateY(180deg)]');
       cardEl.setAttribute('aria-label', cardDef.item.word);
 
       // Speak the word on the FIRST reveal of each item (no spam on re-flips)
@@ -130,8 +131,10 @@ export class MemoryGame extends BaseGame {
         // MISMATCH - flip both back after a delay so the child can study them
         locked = true;
         setTimeout(() => {
-          first.cardEl.classList.remove('memory-card--flipped');
-          second.cardEl.classList.remove('memory-card--flipped');
+          delete first.cardEl.dataset.flipped;
+          delete second.cardEl.dataset.flipped;
+          first.cardEl.querySelector('.memory-card-inner').classList.remove('[transform:rotateY(180deg)]');
+          second.cardEl.querySelector('.memory-card-inner').classList.remove('[transform:rotateY(180deg)]');
           first.cardEl.setAttribute('aria-label', 'Hidden card');
           second.cardEl.setAttribute('aria-label', 'Hidden card');
           locked = false;
@@ -141,18 +144,22 @@ export class MemoryGame extends BaseGame {
 
     // Grid sizing: build a grid CSS class based on pair count so 3/5/6 pairs
     // each get a visually-pleasing layout (2x3, 2x5, 3x4 respectively).
-    const gridClass = `memory-grid memory-grid--pairs-${n}`;
+    let colsClass = 'grid-cols-2 md:grid-cols-3';
+    if (n === 5) colsClass = 'grid-cols-2 md:grid-cols-5';
+    if (n === 6) colsClass = 'grid-cols-3 md:grid-cols-4';
+    
+    const gridClass = `grid ${colsClass} gap-4 w-full max-w-4xl mx-auto mt-6 mb-8`;
     const gridEl = el('div', { class: gridClass }, cardEls.map(c => c.el));
 
     this.bodyContainer.append(
-      el('p', { class: 'game__prompt' }, ['Find the matching pairs']),
+      el('p', { class: 'text-2xl md:text-3xl font-bold text-center text-brand-purple mb-6' }, ['Find the matching pairs']),
       gridEl,
     );
   }
 
   _onMatch(first, second) {
     [first, second].forEach(pick => {
-      pick.cardEl.classList.add('memory-card--matched');
+      pick.cardEl.classList.add('opacity-50', 'pointer-events-none', 'scale-95');
     });
     this.context.services.sfx.play('ding');
     this.context.bus.emit('leo:cheer');

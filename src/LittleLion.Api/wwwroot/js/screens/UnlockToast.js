@@ -14,7 +14,7 @@ export class UnlockToast {
     this._audio = audio;
     this._queue = [];
     this._playing = false;
-    this._root = el('div', { class: 'unlock-toast-host' });
+    this._root = el('div', { class: 'fixed inset-x-0 top-12 pointer-events-none z-[100] flex flex-col items-center gap-4' });
     document.body.appendChild(this._root);
     bus.on('rewards:unlocked', ({ rewards }) => this._enqueue(rewards));
   }
@@ -35,16 +35,16 @@ export class UnlockToast {
     this._sfx?.play('fanfare');
     this._audio?.speak(`You unlocked ${reward.name}!`);
 
-    const toast = el('div', { class: 'unlock-toast' }, [
-      el('div', { class: 'unlock-toast__ribbon' }, ['New!']),
-      el('div', { class: 'unlock-toast__emoji' }, [reward.emoji]),
-      el('div', { class: 'unlock-toast__name' }, [reward.name]),
-      el('div', { class: 'unlock-toast__sub' }, [this._subtitleFor(reward.category)]),
+    const toast = el('div', { class: 'relative bg-white px-8 py-6 rounded-3xl shadow-card flex flex-col items-center text-center animate-toast-enter transition-all duration-500' }, [
+      el('div', { class: 'absolute -top-4 bg-brand-yellow text-ink px-4 py-1 rounded-full font-bold text-sm shadow-sm border-2 border-white' }, ['New!']),
+      el('div', { class: 'text-6xl mb-2 animate-bounce-soft' }, [reward.emoji]),
+      el('div', { class: 'text-2xl font-bold text-brand-purple' }, [reward.name]),
+      el('div', { class: 'text-ink-soft font-medium' }, [this._subtitleFor(reward.category)]),
     ]);
     this._root.appendChild(toast);
 
     setTimeout(() => {
-      toast.classList.add('unlock-toast--leaving');
+      toast.classList.add('-translate-y-full', 'opacity-0');
       setTimeout(() => {
         toast.remove();
         this._playing = false;

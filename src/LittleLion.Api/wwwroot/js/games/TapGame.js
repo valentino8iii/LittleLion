@@ -40,7 +40,7 @@ export class TapGame extends BaseGame {
     let correctTile = null;
     const tiles = options.map((item, idx) => {
       const tile = el('button', {
-        class: 'tile tile--entering',
+        class: 'relative w-full aspect-square rounded-3xl shadow-card bg-white flex flex-col items-center justify-center p-4 border-4 border-transparent hover:-translate-y-1 active:translate-y-1 transition-all animate-screen-enter overflow-hidden',
         style: {
           background: this.tileBackground(item),
           animationDelay: `${idx * 90}ms`,
@@ -50,19 +50,18 @@ export class TapGame extends BaseGame {
           if (locked) return;
           if (item.id === target.id) {
             locked = true;
-            tile.classList.add('tile--correct');
+            tile.classList.add('!border-brand-green', '!bg-green-50', 'scale-105');
             this.context.services.sfx.play('ding');
             audio.speak(item.word);
             this.context.bus.emit('leo:cheer');
             this._showPraise(target.word);
             this.completeRound();
           } else {
-            // Dodge: tile jumps back like it's avoiding the touch
-            tile.classList.add('tile--dodge');
+            tile.classList.add('animate-wiggle', '!bg-red-50');
             this.context.services.sfx.play('buzz');
             this.context.bus.emit('leo:sad');
             this.noteWrong();
-            setTimeout(() => tile.classList.remove('tile--dodge'), 500);
+            setTimeout(() => tile.classList.remove('animate-wiggle', '!bg-red-50'), 500);
           }
         },
       }, [createVocabVisual(item, media, { size: 'medium' })]);
@@ -70,31 +69,29 @@ export class TapGame extends BaseGame {
       return tile;
     });
 
-    // At 7+ tiles a 2-column grid overflows the viewport; 3 columns fits.
-    const gridClass = n >= 7 ? 'tap-grid tap-grid--dense' : 'tap-grid';
+    const gridClass = n >= 7 
+      ? 'grid grid-cols-3 gap-4 w-full max-w-md mx-auto mt-6' 
+      : 'grid grid-cols-2 gap-6 w-full max-w-md mx-auto mt-6';
 
     this.bodyContainer.append(
-      el('p', { class: 'game__prompt' }, [this.promptText]),
+      el('p', { class: 'text-2xl md:text-3xl font-bold text-center text-brand-purple mb-6' }, [this.promptText]),
       el('button', {
-        class: 'sound-button',
+        class: 'flex items-center justify-center gap-3 bg-brand-yellow text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
         onclick: playSound,
       }, [
-        el('span', { class: 'sound-button__icon' }, ['🔊']),
+        el('span', { class: 'text-2xl' }, ['🔊']),
         el('span', {}, ['Play sound']),
       ]),
-      el('div', { class: gridClass, style: { marginTop: '24px' } }, tiles),
+      el('div', { class: gridClass }, tiles),
     );
 
-    // Auto-play the target word shortly after render
     setTimeout(playSound, 400);
 
-    // Arm the hint watcher - Leo will point at the correct tile if the
-    // child hesitates more than 8 seconds
     this.startRoundWatch(correctTile);
   }
 
   _showPraise(word) {
-    const banner = el('div', { class: 'feedback-banner' }, [`Yes! ${word}! 🎉`]);
+    const banner = el('div', { class: 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-8 py-4 rounded-full shadow-card text-2xl font-bold text-brand-green animate-toast-enter z-50 whitespace-nowrap' }, [`Yes! ${word}! 🎉`]);
     this.bodyContainer.appendChild(banner);
   }
 }

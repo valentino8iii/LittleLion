@@ -50,7 +50,7 @@ export class DragGame extends BaseGame {
 
       const item = items.find(i => i.id === draggingId);
       const dot = el('div', {
-        class: 'drag-trail',
+        class: 'fixed w-4 h-4 rounded-full pointer-events-none z-50 animate-fade-out',
         style: {
           left: `${x}px`,
           top: `${y}px`,
@@ -80,15 +80,15 @@ export class DragGame extends BaseGame {
         const item = items.find(i => i.id === slotId);
         const slotTile = tileById.get(slotId);
 
-        chipById.get(slotId).classList.add('word-chip--used');
+        chipById.get(slotId).classList.add('opacity-50', '!bg-gray-200', '!text-gray-400', 'pointer-events-none', 'transform-none', 'shadow-none', 'word-chip--used');
         slotTile.appendChild(
-          el('div', { class: 'tile__label' }, [item.word])
+          el('div', { class: 'absolute bottom-2 bg-white/90 px-4 py-1 rounded-full font-bold text-brand-purple text-sm animate-toast-enter' }, [item.word])
         );
 
         // Lock this slot in: mark it done, dim it, remove the data-slot
         // attribute so it can't be a drop target any more. The remaining
         // unmatched slots visually 'stand out' which helps the child focus.
-        slotTile.classList.add('tile--matched');
+        slotTile.classList.add('opacity-50', 'scale-95', 'pointer-events-none');
         slotTile.removeAttribute('data-slot');
 
         this.context.services.sfx.play('ding');
@@ -112,11 +112,11 @@ export class DragGame extends BaseGame {
           }, 900);
         }
       } else if (slot) {
-        slot.classList.add('tile--wrong');
+        slot.classList.add('animate-wiggle', 'ring-4', 'ring-red-400');
         this.context.services.sfx.play('buzz');
         this.context.bus.emit('leo:sad');
         this.noteWrong();
-        setTimeout(() => slot.classList.remove('tile--wrong'), 400);
+        setTimeout(() => slot.classList.remove('animate-wiggle', 'ring-4', 'ring-red-400'), 400);
       }
 
       ghost?.remove();
@@ -136,7 +136,7 @@ export class DragGame extends BaseGame {
       draggingId = wordId;
       const item = items.find(i => i.id === wordId);
 
-      ghost = el('div', { class: 'word-chip word-chip--ghost' }, [item.word]);
+      ghost = el('div', { class: 'fixed z-50 opacity-80 pointer-events-none scale-110 shadow-lg bg-white px-6 py-3 rounded-full font-bold text-xl text-brand-purple touch-none select-none' }, [item.word]);
       ghost.style.left = `${e.clientX - 50}px`;
       ghost.style.top  = `${e.clientY - 25}px`;
       document.body.appendChild(ghost);
@@ -147,10 +147,10 @@ export class DragGame extends BaseGame {
 
     // Tiles (drop targets)
     const { media } = this.context.services;
-    const tilesWrapper = el('div', { class: 'drag-grid' },
+    const tilesWrapper = el('div', { class: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full max-w-4xl mx-auto mt-6 mb-8' },
       items.map((item, idx) => {
         const tile = el('div', {
-          class: 'tile tile--entering',
+          class: 'relative w-full aspect-square rounded-3xl shadow-card bg-white flex flex-col items-center justify-center p-4 border-4 border-transparent transition-all animate-screen-enter overflow-hidden',
           style: {
             background: this.tileBackground(item),
             animationDelay: `${idx * 90}ms`,
@@ -173,11 +173,11 @@ export class DragGame extends BaseGame {
     // the child either taps to listen (click fires, speech plays) or
     // drags to match (pointerdown fires, drag works, no speech). Both
     // flows feel natural; trying to do both at once was the bug.
-    const chipsWrapper = el('div', { class: 'drag-words' },
+    const chipsWrapper = el('div', { class: 'flex flex-wrap justify-center gap-4 w-full max-w-3xl mx-auto mt-auto mb-4' },
       wordOrder.map(wordId => {
         const item = items.find(i => i.id === wordId);
         const chip = el('div', {
-          class: 'word-chip',
+          class: 'bg-white px-6 py-3 rounded-full shadow-card font-bold text-xl text-brand-purple cursor-grab active:cursor-grabbing hover:-translate-y-1 transition-transform touch-none select-none word-chip',
           onclick: () => {
             // Skip if already matched - re-tapping a green chip stays silent
             if (chip.classList.contains('word-chip--used')) return;
@@ -191,7 +191,7 @@ export class DragGame extends BaseGame {
     );
 
     this.bodyContainer.append(
-      el('p', { class: 'game__prompt' }, ['Tap the word to hear, then drag to the picture']),
+      el('p', { class: 'text-2xl md:text-3xl font-bold text-center text-brand-purple mb-6' }, ['Tap the word to hear, then drag to the picture']),
       tilesWrapper,
       chipsWrapper,
     );

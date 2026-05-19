@@ -101,7 +101,7 @@ export class OddOneOutGame extends BaseGame {
     const pool = this._intruderPool ?? [];
     if (pool.length === 0) {
       this.bodyContainer.append(
-        el('p', { class: 'game__prompt' }, ['Loading...']),
+        el('p', { class: 'text-xl text-center text-brand-purple font-bold' }, ['Loading...']),
       );
       return;
     }
@@ -116,7 +116,7 @@ export class OddOneOutGame extends BaseGame {
     const tiles = options.map((item, idx) => {
       const isIntruder = item.id === intruder.id;
       const tile = el('button', {
-        class: 'tile tile--entering',
+        class: 'relative w-full aspect-square rounded-3xl shadow-card bg-white flex flex-col items-center justify-center p-4 border-4 border-transparent hover:-translate-y-1 active:translate-y-1 transition-all animate-screen-enter overflow-hidden',
         style: {
           background: this.tileBackground(item),
           animationDelay: `${idx * 90}ms`,
@@ -126,18 +126,18 @@ export class OddOneOutGame extends BaseGame {
           if (locked) return;
           if (isIntruder) {
             locked = true;
-            tile.classList.add('tile--correct');
+            tile.classList.add('!border-brand-green', '!bg-green-50', 'scale-105');
             this.context.services.sfx.play('ding');
             audio.speak(item.word);
             this.context.bus.emit('leo:cheer');
             this._showPraise(item.word);
             this.completeRound();
           } else {
-            tile.classList.add('tile--dodge');
+            tile.classList.add('animate-wiggle', '!bg-red-50');
             this.context.services.sfx.play('buzz');
             this.context.bus.emit('leo:sad');
             this.noteWrong();
-            setTimeout(() => tile.classList.remove('tile--dodge'), 500);
+            setTimeout(() => tile.classList.remove('animate-wiggle', '!bg-red-50'), 500);
           }
         },
       }, [createVocabVisual(item, media, { size: 'medium' })]);
@@ -181,7 +181,7 @@ export class OddOneOutGame extends BaseGame {
       const pattern = PATTERNS[Math.floor(Math.random() * PATTERNS.length)];
 
       const tile = el('button', {
-        class: `tile tile--entering color-swatch color-swatch--${pattern}`,
+        class: `relative w-full aspect-square rounded-3xl shadow-card flex flex-col items-center justify-center p-4 border-4 border-white/50 hover:-translate-y-1 active:translate-y-1 transition-all animate-screen-enter overflow-hidden color-swatch color-swatch--${pattern}`,
         style: {
           // Use the raw color directly - we explicitly want to bypass
           // tileBackground()'s Colors+Hard neutral rule here. The
@@ -195,18 +195,18 @@ export class OddOneOutGame extends BaseGame {
           if (locked) return;
           if (isIntruder) {
             locked = true;
-            tile.classList.add('tile--correct');
+            tile.classList.add('!border-white', 'scale-105');
             this.context.services.sfx.play('ding');
             audio.speak(item.word);
             this.context.bus.emit('leo:cheer');
             this._showPraise(item.word);
             this.completeRound();
           } else {
-            tile.classList.add('tile--dodge');
+            tile.classList.add('animate-wiggle');
             this.context.services.sfx.play('buzz');
             this.context.bus.emit('leo:sad');
             this.noteWrong();
-            setTimeout(() => tile.classList.remove('tile--dodge'), 500);
+            setTimeout(() => tile.classList.remove('animate-wiggle'), 500);
           }
         },
       });
@@ -224,21 +224,23 @@ export class OddOneOutGame extends BaseGame {
   _finishRender(tiles, tileCount, intruderTile) {
     const { audio } = this.context.services;
 
-    const gridClass = tileCount >= 5 ? 'tap-grid tap-grid--dense' : 'tap-grid';
+    const gridClass = tileCount >= 5 
+      ? 'grid grid-cols-3 gap-4 w-full max-w-md mx-auto mt-6' 
+      : 'grid grid-cols-2 gap-6 w-full max-w-md mx-auto mt-6';
 
     const promptSpoken = `${this.lessonTitle}. Which one doesn't belong?`;
     const playPrompt = () => audio.speak(promptSpoken);
 
     this.bodyContainer.append(
-      el('p', { class: 'game__prompt' }, [`Which one doesn't belong?`]),
+      el('p', { class: 'text-2xl md:text-3xl font-bold text-center text-brand-purple mb-6' }, [`Which one doesn't belong?`]),
       el('button', {
-        class: 'sound-button',
+        class: 'flex items-center justify-center gap-3 bg-brand-yellow text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
         onclick: playPrompt,
       }, [
-        el('span', { class: 'sound-button__icon' }, ['🔊']),
+        el('span', { class: 'text-2xl' }, ['🔊']),
         el('span', {}, ['Play sound']),
       ]),
-      el('div', { class: gridClass, style: { marginTop: '24px' } }, tiles),
+      el('div', { class: gridClass }, tiles),
     );
 
     setTimeout(playPrompt, 500);
@@ -246,7 +248,7 @@ export class OddOneOutGame extends BaseGame {
   }
 
   _showPraise(word) {
-    const banner = el('div', { class: 'feedback-banner' }, [`Yes! ${word} is different! 🎉`]);
+    const banner = el('div', { class: 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-8 py-4 rounded-full shadow-card text-2xl font-bold text-brand-green animate-toast-enter z-50 whitespace-nowrap' }, [`Yes! ${word} is different! 🎉`]);
     this.bodyContainer.appendChild(banner);
   }
 }

@@ -17,23 +17,23 @@ export class WinScreen extends Component {
     this._leo = new Leo(this.context.bus, { size: 'large' });
     this.onDispose(() => this._leo.destroy());
 
-    const starRow = el('div', { class: 'win__stars' },
+    const starRow = el('div', { class: 'text-4xl flex gap-2 justify-center mb-12' },
       Array.from({ length: Math.min(this.stars, 5) }).map(() => el('span', {}, ['⭐']))
     );
 
-    const root = el('div', { class: 'screen win' }, [
+    const root = el('div', { class: 'screen absolute inset-0 flex flex-col p-4 sm:p-6 overflow-y-auto items-center justify-center text-center' }, [
       this._renderConfetti(),
-      el('div', { class: 'win__trophy' }, [this._leo.element]),
-      el('h2', { class: 'win__title' }, ['Great Job!']),
-      el('p',  { class: 'win__subtitle' }, [`You earned ${this.stars} star${this.stars === 1 ? '' : 's'}!`]),
+      el('div', { class: 'text-8xl mb-8 animate-bounce-soft' }, [this._leo.element]),
+      el('h2', { class: 'text-5xl sm:text-6xl font-display font-bold text-brand-blue text-shadow-strong mb-2' }, ['Great Job!']),
+      el('p',  { class: 'text-2xl text-ink-soft font-medium mb-8' }, [`You earned ${this.stars} star${this.stars === 1 ? '' : 's'}!`]),
       starRow,
-      el('div', { class: 'win__buttons' }, [
+      el('div', { class: 'flex gap-4 flex-wrap justify-center' }, [
         el('button', {
-          class: 'btn btn--ghost',
+          class: 'px-8 py-4 rounded-full font-bold text-xl shadow-btn hover:-translate-y-1 active:translate-y-1 transition-all outline-none focus:ring-4 border-4 bg-white/80 text-brand-blue border-white hover:bg-white',
           onclick: () => this.context.router.navigate('home'),
         }, ['Home']),
         el('button', {
-          class: 'btn btn--primary',
+          class: 'px-8 py-4 rounded-full font-bold text-xl shadow-btn hover:-translate-y-1 active:translate-y-1 transition-all outline-none focus:ring-4 border-4 bg-brand-green text-white border-green-400 hover:bg-green-500',
           onclick: () => this.context.router.navigate(this.playedGame, {
             lessonId: this.lessonId,
             difficulty: this.difficulty,
@@ -53,16 +53,15 @@ export class WinScreen extends Component {
   }
 
   _renderConfetti() {
-    const container = el('div', { class: 'confetti' });
+    const container = el('div', { class: 'absolute inset-0 pointer-events-none overflow-hidden z-50' });
     for (let i = 0; i < 28; i++) {
       const piece = el('div', {
-        class: 'confetti__piece',
+        class: 'absolute -top-4 w-4 h-8 opacity-0 animate-fall rounded-full',
         style: {
           left: `${Math.random() * 100}%`,
           background: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
           animationDelay: `${Math.random() * 0.3}s`,
           animationDuration: `${1.2 + Math.random() * 0.8}s`,
-          transform: `rotate(${Math.random() * 360}deg)`,
         },
       });
       container.appendChild(piece);
