@@ -5,9 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Little Lion · Learn English</title>
 
+  <script>
+    (function() {
+      let savedTheme = localStorage.getItem('littlelion-theme');
+      if (savedTheme !== 'boy' && savedTheme !== 'girl') {
+        savedTheme = 'girl';
+        localStorage.setItem('littlelion-theme', 'girl');
+      }
+      if (savedTheme === 'boy') {
+        document.documentElement.classList.add('theme-boy');
+      }
+
+      window.getCurrentTheme = function() {
+        return document.documentElement.classList.contains('theme-boy') ? 'boy' : 'girl';
+      };
+
+      window.toggleTheme = function() {
+        const current = window.getCurrentTheme();
+        const next = current === 'girl' ? 'boy' : 'girl';
+        if (next === 'boy') {
+          document.documentElement.classList.add('theme-boy');
+        } else {
+          document.documentElement.classList.remove('theme-boy');
+        }
+        localStorage.setItem('littlelion-theme', next);
+        window.dispatchEvent(new CustomEvent('themechanged', { detail: next }));
+        return next;
+      };
+    })();
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&family=Lilita+One&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:," />
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -16,11 +46,14 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Fredoka', 'system-ui', 'sans-serif'],
-            display: ['Fredoka', 'system-ui', 'sans-serif'],
+            sans: ['var(--font-body)', 'Fredoka', 'system-ui', 'sans-serif'],
+            display: ['var(--font-display)', 'Fredoka', 'system-ui', 'sans-serif'],
           },
           colors: {
             brand: {
+              primary: 'var(--color-primary)',
+              secondary: 'var(--color-secondary)',
+              accent: 'var(--color-accent)',
               amber: '#FFB84C',
               pink: '#FF6B9D',
               teal: '#4ECDC4',
@@ -119,33 +152,61 @@
   <style type="text/tailwindcss">
     @layer utilities {
       .text-shadow {
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        text-shadow: 2px 2px 4px var(--text-shadow-color);
       }
       .text-shadow-strong {
-        text-shadow: 0 4px 0 rgba(0,0,0,0.15);
+        text-shadow: 0 4px 0 var(--text-shadow-color);
       }
       .screen {
         @apply absolute inset-0 flex flex-col opacity-0 animate-screen-enter;
       }
     }
+    :root {
+      --color-primary: #FF6B9D;      /* brand-pink */
+      --color-secondary: #FF8C42;    /* brand-orange */
+      --color-accent: #FFD93D;       /* brand-yellow */
+      --body-bg: radial-gradient(circle at 20% 20%, #FFE5B4 0%, #FFD1DC 50%, #E0E7FF 100%);
+      --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --font-display: 'DynaPuff', 'Fredoka', system-ui, sans-serif;
+      --font-body: 'Fredoka', system-ui, sans-serif;
+      --font-case: lowercase;
+      --font-spacing: -0.01em;
+      --text-shadow-color: rgba(255, 107, 157, 0.35);
+    }
+    .theme-boy {
+      --color-primary: #5B9EFF;      /* brand-blue */
+      --color-secondary: #4ECDC4;    /* brand-teal */
+      --color-accent: #FFB84C;       /* brand-amber */
+      --body-bg: radial-gradient(circle at 20% 20%, #EBF4FF 0%, #C4DFFF 50%, #F5F9FF 100%);
+      --font-display: 'Lilita One', 'Fredoka', system-ui, sans-serif;
+      --font-body: 'Fredoka', system-ui, sans-serif;
+      --font-case: uppercase;
+      --font-spacing: 0.04em;
+      --text-shadow-color: rgba(91, 158, 255, 0.35);
+    }
+
+    .font-display {
+      font-family: var(--font-display) !important;
+      text-transform: var(--font-case);
+      letter-spacing: var(--font-spacing);
+      transition: font-family 0.6s ease-in-out, text-transform 0.6s ease-in-out, letter-spacing 0.6s ease-in-out;
+    }
+
     html, body {
       @apply h-full font-sans text-ink antialiased select-none;
       -webkit-tap-highlight-color: transparent;
+      font-family: var(--font-body), 'Fredoka', system-ui, sans-serif;
     }
     body {
-      background: radial-gradient(circle at 20% 20%, #FFE5B4 0%, #FFD1DC 50%, #E0E7FF 100%);
-      @apply flex items-center justify-center p-0 md:p-4 min-h-screen overflow-hidden;
+      background: var(--body-bg);
+      @apply flex items-center justify-center p-0 md:p-4 min-h-screen overflow-hidden transition-all duration-700 ease-in-out;
     }
     button {
       @apply cursor-pointer outline-none;
     }
 
     /* Scene Backgrounds and Animations */
-    :root {
-      --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
-      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --font-display: 'Fredoka', system-ui, sans-serif;
-    }
     
     .scene {
       position: absolute;

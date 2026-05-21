@@ -36,7 +36,7 @@ export class BalloonGame extends BaseGame {
     let locked = false;
 
     const promptBtn = el('button', {
-      class: 'flex items-center justify-center gap-3 bg-brand-yellow text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
+      class: 'flex items-center justify-center gap-3 bg-brand-accent text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
       style: { marginBottom: '12px', position: 'relative', zIndex: '50' },
       onclick: () => audio.speak(target.word),
     }, [

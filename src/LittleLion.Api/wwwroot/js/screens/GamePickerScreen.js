@@ -29,12 +29,12 @@ export class GamePickerScreen extends Component {
     return el('div', { class: 'screen absolute inset-0 flex flex-col p-4 sm:p-6 overflow-y-auto' }, [
       el('div', { class: 'flex items-center mb-6 gap-4 shrink-0' }, [
         el('button', {
-          class: 'w-12 h-12 flex items-center justify-center bg-white/80 rounded-full shadow-soft text-2xl font-bold hover:bg-white active:scale-95 transition-transform shrink-0 outline-none focus:ring-4 focus:ring-brand-blue/50',
+          class: 'w-12 h-12 flex items-center justify-center bg-white/80 rounded-full shadow-soft text-2xl font-bold hover:bg-white active:scale-95 transition-transform shrink-0 outline-none focus:ring-4 focus:ring-brand-primary/50',
           'aria-label': 'Back',
           onclick: () => this.context.router.navigate('home'),
         }, ['←']),
         el('div', { class: 'flex-1' }, [
-          el('h1', { class: 'text-3xl sm:text-4xl font-display font-bold text-brand-blue text-shadow-strong' }, ['Pick a game']),
+          el('h1', { class: 'text-3xl sm:text-4xl font-display font-bold text-brand-primary text-shadow-strong' }, ['Pick a game']),
           el('p',  { class: 'text-xl text-ink-soft font-medium mt-1' }, [
             `${this._humanTitle()} · ${this.difficulty}`,
           ]),

@@ -234,7 +234,7 @@ export class OddOneOutGame extends BaseGame {
     this.bodyContainer.append(
       el('p', { class: 'text-2xl md:text-3xl font-bold text-center text-brand-purple mb-6' }, [`Which one doesn't belong?`]),
       el('button', {
-        class: 'flex items-center justify-center gap-3 bg-brand-yellow text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
+        class: 'flex items-center justify-center gap-3 bg-brand-accent text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
         onclick: playPrompt,
       }, [
         el('span', { class: 'text-2xl' }, ['🔊']),

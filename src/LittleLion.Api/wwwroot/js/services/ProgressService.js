@@ -10,7 +10,7 @@ export class ProgressService {
   constructor(apiClient, bus) {
     this.api = apiClient;
     this.bus = bus;
-    this._state = this._emptyState();
+    this._state = this._loadFromLocalStorage() || this._emptyState();
     this._loaded = false;
   }
 
@@ -67,6 +67,7 @@ export class ProgressService {
       console.error('ProgressService.recordSession failed', err);
       // Fallback: optimistic local star-only update so UI still updates
       this._state.totalStars += starsEarned;
+      this._saveToLocalStorage();
       this.bus.emit('progress:changed', { ...this._state });
     }
   }
@@ -79,6 +80,7 @@ export class ProgressService {
       lessons:        Array.isArray(dto.lessons)        ? dto.lessons        : [],
       unlockedItems:  Array.isArray(dto.unlockedItems)  ? dto.unlockedItems  : [],
     };
+    this._saveToLocalStorage();
     this.bus.emit('progress:changed', { ...this._state });
   }
 
@@ -90,5 +92,42 @@ export class ProgressService {
       lessons: [],
       unlockedItems: [],
     };
+  }
+
+  _isValidProgress(data) {
+    if (!data || typeof data !== 'object') return false;
+    if (typeof data.totalStars !== 'number' || data.totalStars < 0) return false;
+    if (typeof data.streakDays !== 'number' || data.streakDays < 0) return false;
+    if (!Array.isArray(data.lessons)) return false;
+    if (!Array.isArray(data.unlockedItems)) return false;
+    return true;
+  }
+
+  _loadFromLocalStorage() {
+    try {
+      const dataStr = localStorage.getItem('littlelion-progress');
+      if (!dataStr) return null;
+      const data = JSON.parse(dataStr);
+      if (this._isValidProgress(data)) {
+        return {
+          totalStars: data.totalStars,
+          streakDays: data.streakDays,
+          lastActiveDate: data.lastActiveDate ?? null,
+          lessons: data.lessons,
+          unlockedItems: data.unlockedItems
+        };
+      }
+    } catch (err) {
+      console.error('ProgressService: failed to load progress from localStorage', err);
+    }
+    return null;
+  }
+
+  _saveToLocalStorage() {
+    try {
+      localStorage.setItem('littlelion-progress', JSON.stringify(this._state));
+    } catch (err) {
+      console.error('ProgressService: failed to save progress to localStorage', err);
+    }
   }
 }

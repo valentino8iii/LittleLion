@@ -24,12 +24,12 @@ export class WinScreen extends Component {
     const root = el('div', { class: 'screen absolute inset-0 flex flex-col p-4 sm:p-6 overflow-y-auto items-center justify-center text-center' }, [
       this._renderConfetti(),
       el('div', { class: 'text-8xl mb-8 animate-bounce-soft' }, [this._leo.element]),
-      el('h2', { class: 'text-5xl sm:text-6xl font-display font-bold text-brand-blue text-shadow-strong mb-2' }, ['Great Job!']),
+      el('h2', { class: 'text-5xl sm:text-6xl font-display font-bold text-brand-primary text-shadow-strong mb-2' }, ['Great Job!']),
       el('p',  { class: 'text-2xl text-ink-soft font-medium mb-8' }, [`You earned ${this.stars} star${this.stars === 1 ? '' : 's'}!`]),
       starRow,
       el('div', { class: 'flex gap-4 flex-wrap justify-center' }, [
         el('button', {
-          class: 'px-8 py-4 rounded-full font-bold text-xl shadow-btn hover:-translate-y-1 active:translate-y-1 transition-all outline-none focus:ring-4 border-4 bg-white/80 text-brand-blue border-white hover:bg-white',
+          class: 'px-8 py-4 rounded-full font-bold text-xl shadow-btn hover:-translate-y-1 active:translate-y-1 transition-all outline-none focus:ring-4 border-4 bg-white/80 text-brand-primary border-white hover:bg-white',
           onclick: () => this.context.router.navigate('home'),
         }, ['Home']),
         el('button', {

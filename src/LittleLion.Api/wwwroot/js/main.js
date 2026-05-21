@@ -45,6 +45,9 @@ function bootstrap() {
   services.progress.refresh();
   services.rewards.refresh();
 
+  // Expose sound effects globally for dynamic/functional components
+  window.littleLionSfx = services.sfx;
+
   const rootEl = document.getElementById('app');
   const router = new Router(rootEl, null);
 

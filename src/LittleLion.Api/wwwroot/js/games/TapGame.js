@@ -69,14 +69,19 @@ export class TapGame extends BaseGame {
       return tile;
     });
 
-    const gridClass = n >= 7 
-      ? 'grid grid-cols-3 gap-4 w-full max-w-md mx-auto mt-6' 
-      : 'grid grid-cols-2 gap-6 w-full max-w-md mx-auto mt-6';
+    let gridClass = 'grid gap-4 w-full mx-auto mt-4 sm:mt-6';
+    if (n <= 3) {
+      gridClass += ' grid-cols-2 sm:grid-cols-3 max-w-sm sm:max-w-2xl';
+    } else if (n <= 5) {
+      gridClass += ' grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-4xl';
+    } else {
+      gridClass += ' grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-5xl';
+    }
 
     this.bodyContainer.append(
-      el('p', { class: 'text-2xl md:text-3xl font-bold text-center text-brand-purple mb-6' }, [this.promptText]),
+      el('p', { class: 'text-xl sm:text-2xl md:text-3xl font-bold text-center text-brand-purple mb-3 sm:mb-6' }, [this.promptText]),
       el('button', {
-        class: 'flex items-center justify-center gap-3 bg-brand-yellow text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
+        class: 'flex items-center justify-center gap-2 sm:gap-3 bg-brand-accent text-ink font-bold text-lg sm:text-xl px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-2 sm:mb-4',
         onclick: playSound,
       }, [
         el('span', { class: 'text-2xl' }, ['🔊']),

@@ -86,6 +86,7 @@ export class BaseGame extends Component {
       }),
       onHome: () => this.context.router.navigate('home'),
     });
+    this.onDispose(() => this.topBar.destroy());
 
     this.bodyContainer = el('div', { class: 'flex-1 relative z-10 p-6 flex flex-col items-center justify-center overflow-y-auto w-full' });
 
@@ -185,7 +186,7 @@ export class BaseGame extends Component {
       this._hintTimer = null;
     }
     if (this._hintTargetTile) {
-      this._hintTargetTile.classList.remove('ring-8', 'ring-brand-yellow/50');
+      this._hintTargetTile.classList.remove('ring-8', 'ring-brand-accent/50');
       this._hintTargetTile = null;
     }
   }
@@ -196,7 +197,7 @@ export class BaseGame extends Component {
     // Glow the correct tile + Leo points at it. Direction picked from
     // whether the tile is on the left or right half of the viewport.
     const tile = this._hintTargetTile;
-    tile.classList.add('ring-8', 'ring-brand-yellow/50');
+    tile.classList.add('ring-8', 'ring-brand-accent/50');
 
     const rect = tile.getBoundingClientRect();
     const midX = window.innerWidth / 2;

@@ -36,9 +36,9 @@ export class UnlockToast {
     this._audio?.speak(`You unlocked ${reward.name}!`);
 
     const toast = el('div', { class: 'relative bg-white px-8 py-6 rounded-3xl shadow-card flex flex-col items-center text-center animate-toast-enter transition-all duration-500' }, [
-      el('div', { class: 'absolute -top-4 bg-brand-yellow text-ink px-4 py-1 rounded-full font-bold text-sm shadow-sm border-2 border-white' }, ['New!']),
+      el('div', { class: 'absolute -top-4 bg-brand-accent text-ink px-4 py-1 rounded-full font-bold text-sm shadow-sm border-2 border-white' }, ['New!']),
       el('div', { class: 'text-6xl mb-2 animate-bounce-soft' }, [reward.emoji]),
-      el('div', { class: 'text-2xl font-bold text-brand-purple' }, [reward.name]),
+      el('div', { class: 'text-2xl font-bold text-brand-primary' }, [reward.name]),
       el('div', { class: 'text-ink-soft font-medium' }, [this._subtitleFor(reward.category)]),
     ]);
     this._root.appendChild(toast);

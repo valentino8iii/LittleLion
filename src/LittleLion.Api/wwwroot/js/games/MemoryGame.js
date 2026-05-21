@@ -63,8 +63,8 @@ export class MemoryGame extends BaseGame {
         onclick: () => handleTap(card, cardDef),
       }, [
         el('div', { class: 'memory-card-inner relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d]' }, [
-          el('div', { class: 'absolute inset-0 w-full h-full rounded-3xl shadow-card [backface-visibility:hidden] flex flex-col items-center justify-center p-4 bg-brand-blue text-white text-6xl font-bold' }, ['?']),
-          el('div', { class: 'absolute inset-0 w-full h-full rounded-3xl shadow-card [backface-visibility:hidden] flex flex-col items-center justify-center p-4 bg-white [transform:rotateY(180deg)] border-4 border-brand-yellow' }, [
+          el('div', { class: 'absolute inset-0 w-full h-full rounded-3xl shadow-card [backface-visibility:hidden] flex flex-col items-center justify-center p-4 bg-brand-primary text-white text-6xl font-bold' }, ['?']),
+          el('div', { class: 'absolute inset-0 w-full h-full rounded-3xl shadow-card [backface-visibility:hidden] flex flex-col items-center justify-center p-4 bg-white [transform:rotateY(180deg)] border-4 border-brand-accent' }, [
             createVocabVisual(cardDef.item, media, { size: 'small' }),
           ]),
         ]),

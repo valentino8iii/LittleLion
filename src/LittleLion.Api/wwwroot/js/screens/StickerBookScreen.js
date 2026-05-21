@@ -16,7 +16,7 @@ const CATEGORY_LABELS = {
 export class StickerBookScreen extends Component {
   render() {
     const backBtn = el('button', {
-      class: 'flex items-center justify-center gap-3 bg-brand-blue text-white rounded-full px-8 py-4 shadow-card font-bold text-xl hover:-translate-y-1 active:translate-y-1 transition-all outline-none focus:ring-4 focus:ring-brand-blue/50',
+      class: 'flex items-center justify-center gap-3 bg-brand-primary text-white rounded-full px-8 py-4 shadow-card font-bold text-xl hover:-translate-y-1 active:translate-y-1 transition-all outline-none focus:ring-4 focus:ring-brand-primary/50',
       'aria-label': 'Back',
       onclick: () => this.context.router.navigate('home'),
     }, [
@@ -33,7 +33,7 @@ export class StickerBookScreen extends Component {
     return el('div', { class: 'screen absolute inset-0 flex flex-col overflow-hidden' }, [
       el('div', { class: 'flex-1 overflow-y-auto p-4 sm:p-6 pb-8' }, [
         el('div', { class: 'mb-8 text-center' }, [
-          el('h1', { class: 'text-4xl sm:text-5xl font-display font-bold text-brand-blue text-shadow-strong' }, ['Sticker Book']),
+          el('h1', { class: 'text-4xl sm:text-5xl font-display font-bold text-brand-primary text-shadow-strong' }, ['Sticker Book']),
           el('p',  { class: 'text-xl text-ink-soft font-medium mt-2 summary-subtitle' }, [this._summaryLine()]),
         ]),
         this._content,
@@ -70,7 +70,7 @@ export class StickerBookScreen extends Component {
       if (items.length === 0) continue;
 
       this._content.appendChild(
-        el('h2', { class: 'text-2xl font-bold text-brand-purple mb-4 border-b-2 border-brand-purple/20 pb-2' }, [CATEGORY_LABELS[category]])
+        el('h2', { class: 'text-2xl font-bold text-brand-secondary mb-4 border-b-2 border-brand-secondary/20 pb-2' }, [CATEGORY_LABELS[category]])
       );
 
       const grid = el('div', { class: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4' });
