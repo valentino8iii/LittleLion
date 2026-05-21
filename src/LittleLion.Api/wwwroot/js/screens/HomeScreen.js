@@ -178,7 +178,7 @@ export class HomeScreen extends Component {
     this._leo = new Leo(this.context.bus, { size: 'medium' });
     this.onDispose(() => this._leo.destroy());
 
-    return el('div', { class: 'bg-white/90 rounded-3xl p-6 mb-8 shadow-card flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left shrink-0' }, [
+    return el('div', { class: 'bg-white/90 rounded-3xl p-6 mb-8 shadow-card flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left shrink-0 ring-2 ring-brand-primary/50' }, [
       el('div', { class: 'text-6xl animate-float' }, [this._leo.element]),
       el('div', { class: 'flex-1 text-2xl text-ink' }, [
         el('strong', { class: 'block text-3xl mb-1 text-brand-purple' }, [`Hi friend!`]),
