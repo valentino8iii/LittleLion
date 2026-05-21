@@ -51,9 +51,9 @@
           },
           colors: {
             brand: {
-              primary: 'var(--color-primary)',
-              secondary: 'var(--color-secondary)',
-              accent: 'var(--color-accent)',
+              primary: 'rgba(var(--color-primary), <alpha-value>)',
+              secondary: 'rgba(var(--color-secondary), <alpha-value>)',
+              accent: 'rgba(var(--color-accent), <alpha-value>)',
               amber: '#FFB84C',
               pink: '#FF6B9D',
               teal: '#4ECDC4',
@@ -162,9 +162,9 @@
       }
     }
     :root {
-      --color-primary: #FF6B9D;      /* brand-pink */
-      --color-secondary: #FF8C42;    /* brand-orange */
-      --color-accent: #FFD93D;       /* brand-yellow */
+      --color-primary: 255, 107, 157;      /* brand-pink */
+      --color-secondary: 255, 140, 66;    /* brand-orange */
+      --color-accent: 255, 217, 61;       /* brand-yellow */
       --body-bg: radial-gradient(circle at 20% 20%, #FFE5B4 0%, #FFD1DC 50%, #E0E7FF 100%);
       --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
       --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -175,9 +175,9 @@
       --text-shadow-color: rgba(255, 107, 157, 0.35);
     }
     .theme-boy {
-      --color-primary: #5B9EFF;      /* brand-blue */
-      --color-secondary: #4ECDC4;    /* brand-teal */
-      --color-accent: #FFB84C;       /* brand-amber */
+      --color-primary: 91, 158, 255;      /* brand-blue */
+      --color-secondary: 78, 205, 196;    /* brand-teal */
+      --color-accent: 255, 184, 76;       /* brand-amber */
       --body-bg: radial-gradient(circle at 20% 20%, #EBF4FF 0%, #C4DFFF 50%, #F5F9FF 100%);
       --font-display: 'Lilita One', 'Fredoka', system-ui, sans-serif;
       --font-body: 'Fredoka', system-ui, sans-serif;

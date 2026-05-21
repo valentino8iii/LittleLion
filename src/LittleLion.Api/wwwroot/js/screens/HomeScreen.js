@@ -112,14 +112,14 @@ export class HomeScreen extends Component {
   _buildHeader() {
     const getThemeIcon = (theme) => {
       if (theme === 'boy') {
-        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-brand-primary animate-bounce-soft"><path d="M4.5 16.5c-1.5 1.26-2 3.5-2 3.5s2.24-.5 3.5-2M15 9l-9 9m16-12c-2.5 0-5.5 1.5-7.5 3.5L5 13.5c-1.5 1.5-1.5 4 0 5.5s4 1.5 5.5 0L14 15.5c2-2 3.5-5 3.5-7.5m4.5-4.5c.5.5.5 1.5 0 2s-1.5 0-2 0m-3-1s.5.5.5 1.5"/></svg>`;
+        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-brand-primary"><path d="M3 15h18v-2a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v2z" fill="#93C5FD" stroke="currentColor" /><path d="M7 10l3-4h4l3 4z" fill="white" stroke="currentColor" /><path d="M17 10h4v-3h-4z" fill="#60A5FA" stroke="currentColor" /><circle cx="7.5" cy="16.5" r="2" fill="#4B5563" stroke="currentColor" /><circle cx="7.5" cy="16.5" r="0.5" fill="white" /><circle cx="16.5" cy="16.5" r="2" fill="#4B5563" stroke="currentColor" /><circle cx="16.5" cy="16.5" r="0.5" fill="white" /></svg>`;
       } else {
-        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-brand-primary animate-bounce-soft"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-brand-primary"><path d="M9 13c0-3.5-1.5-6.5-1.5-6.5S7 4 8 3s2.5.5 2.5 2c0 2 .5 5.5 1.5 8" fill="white" stroke="currentColor"/><path d="M15 13c0-3.5 1.5-6.5 1.5-6.5s.5-2.5-.5-3.5-2.5.5-2.5 2c0 2-.5 5.5-1.5 8" fill="white" stroke="currentColor"/><path d="M5 17c0-2.5 2.5-3.5 7-3.5s7 1 7 3.5-2.5 3.5-7 3.5-7-1-7-3.5z" fill="white" stroke="currentColor"/><path d="M8.5 10c0-1.5-.7-3.5-.7-3.5s-.2-1 .2-1.5.8-.2.8.5-.2 2.5.2 4.5" fill="#FCA5A5"/><path d="M15.5 10c0-1.5.7-3.5.7-3.5s.2-1-.2-1.5-.8-.2-.8.5.2 2.5-.2 4.5" fill="#FCA5A5"/><circle cx="9.5" cy="16" r="0.8" fill="currentColor"/><circle cx="14.5" cy="16" r="0.8" fill="currentColor"/><polygon points="12,17 11,16 13,16" fill="#F87171" stroke="#F87171" stroke-width="0.5"/><path d="M11 18c.3.3.7.3 1 0s.7-.3 1 0" /></svg>`;
       }
     };
 
     const themeBtn = el('button', {
-      class: 'relative flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-brand-primary group',
+      class: 'relative flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-brand-primary group shrink-0 border-l border-ink/20 pl-1 h-5 sm:h-6 outline-none focus:outline-none',
       title: 'Toggle Theme',
       onclick: () => {
         window.toggleTheme();
@@ -127,18 +127,8 @@ export class HomeScreen extends Component {
       }
     });
 
-    const dropdownThemeBtn = el('button', {
-      class: 'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-gray-50 text-left font-bold text-base text-brand-primary active:scale-95 transition-all outline-none',
-      onclick: (e) => {
-        e.stopPropagation();
-        window.toggleTheme();
-        window.littleLionSfx?.play('pop');
-      }
-    });
-
     const updateToggleIcon = (theme) => {
       themeBtn.innerHTML = getThemeIcon(theme);
-      dropdownThemeBtn.innerHTML = `${getThemeIcon(theme)} <span class="text-ink ml-1 font-display">Theme</span>`;
     };
 
     updateToggleIcon(window.getCurrentTheme?.() || 'girl');
@@ -151,63 +141,6 @@ export class HomeScreen extends Component {
       window.removeEventListener('themechanged', onThemeChanged);
     });
 
-    const dropdownStickerBtn = el('button', {
-      class: 'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-gray-50 text-left font-bold text-base text-brand-primary active:scale-95 transition-all outline-none',
-      onclick: (e) => {
-        e.stopPropagation();
-        this.context.router.navigate('stickerBook');
-      }
-    }, [
-      el('span', { class: 'text-xl' }, ['🌟']),
-      el('span', { class: 'font-display' }, ['Stickers']),
-      el('span', { class: 'ml-auto text-sm bg-brand-primary/10 px-2 py-0.5 rounded-full text-brand-primary dropdown-sticker-badge font-display' }, [this._stickerCount.textContent || String(this._countValidUnlocks())])
-    ]);
-
-    const dropdown = el('div', {
-      class: 'absolute right-0 top-full mt-2 bg-white rounded-2xl shadow-card border-2 border-gray-100 p-2 flex flex-col gap-1 min-w-[160px] hidden z-50 transition-all duration-300 transform origin-top-right scale-95 opacity-0 pointer-events-none',
-    }, [
-      dropdownStickerBtn,
-      dropdownThemeBtn,
-    ]);
-
-    const moreBtn = el('button', {
-      class: 'flex sm:hidden w-8 h-8 items-center justify-center rounded-full hover:bg-gray-100 active:scale-95 transition-all text-ink/70 shrink-0 relative outline-none',
-      title: 'More options',
-      onclick: (e) => {
-        e.stopPropagation();
-        const isHidden = dropdown.classList.contains('hidden');
-        if (isHidden) {
-          dropdown.classList.remove('hidden');
-          dropdown.offsetHeight;
-          dropdown.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
-          dropdown.classList.add('scale-100', 'opacity-100');
-        } else {
-          dropdown.classList.add('scale-95', 'opacity-0');
-          dropdown.classList.remove('scale-100', 'opacity-100');
-          setTimeout(() => {
-            dropdown.classList.add('hidden', 'pointer-events-none');
-          }, 150);
-        }
-      }
-    }, [
-      el('span', { class: 'text-xl font-bold leading-none select-none pb-1.5' }, ['···']),
-      dropdown,
-    ]);
-
-    const closeDropdown = (e) => {
-      if (!dropdown.contains(e.target) && !moreBtn.contains(e.target)) {
-        dropdown.classList.add('scale-95', 'opacity-0');
-        dropdown.classList.remove('scale-100', 'opacity-100');
-        setTimeout(() => {
-          dropdown.classList.add('hidden', 'pointer-events-none');
-        }, 150);
-      }
-    };
-    window.addEventListener('click', closeDropdown);
-    this.onDispose(() => {
-      window.removeEventListener('click', closeDropdown);
-    });
-
     return el('div', { class: 'flex justify-between items-center gap-3 mb-6 shrink-0 relative' }, [
       el('div', { class: 'min-w-0 flex-1 sm:flex-initial' }, [
         el('h1', { class: 'text-2xl sm:text-5xl font-display font-bold text-brand-primary text-shadow-strong truncate sm:overflow-visible' }, ['Little Lion']),
@@ -217,16 +150,14 @@ export class HomeScreen extends Component {
         this._streakLabel,
         el('div', { class: 'flex items-center gap-1 shrink-0' }, ['⭐', this._starsLabel]),
         el('button', {
-          class: 'hidden sm:flex relative items-center gap-1 text-brand-primary hover:scale-110 active:scale-95 transition-all mr-1 shrink-0',
+          class: 'flex relative items-center gap-1 text-brand-primary hover:scale-110 active:scale-95 transition-all shrink-0',
           title: 'Sticker Book',
           onclick: () => this.context.router.navigate('stickerBook'),
         }, [
           el('span', { class: 'text-xl' }, ['🌟']),
           this._stickerCount,
         ]),
-        el('div', { class: 'hidden sm:block w-px h-5 bg-ink/20 mx-1 shrink-0' }),
-        el('div', { class: 'hidden sm:flex shrink-0' }, [themeBtn]),
-        moreBtn,
+        themeBtn,
       ]),
     ]);
   }
@@ -263,9 +194,9 @@ export class HomeScreen extends Component {
 
     ['Easy', 'Medium', 'Hard'].forEach(level => {
       const isActive = level === current;
-      const baseClass = 'px-6 py-2 rounded-full font-bold transition-colors outline-none focus:ring-2 focus:ring-brand-primary/50';
-      const activeClass = 'bg-white shadow-soft text-brand-primary';
-      const inactiveClass = 'text-gray-500 hover:bg-gray-200/50';
+      const baseClass = 'px-6 py-2 border-2 rounded-full font-bold transition-all outline-none focus:ring-2 focus:ring-brand-primary/50';
+      const activeClass = 'bg-white shadow-soft text-brand-primary border-brand-primary';
+      const inactiveClass = 'text-gray-500 hover:bg-gray-200/50 border-transparent';
 
       const pill = el('button', {
         class: `${baseClass} ${isActive ? activeClass : inactiveClass}`,

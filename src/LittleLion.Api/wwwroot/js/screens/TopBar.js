@@ -20,11 +20,9 @@ export function createTopBar({ onBack, onHome }) {
 
   const getThemeIcon = (theme) => {
     if (theme === 'boy') {
-      // Rocket SVG (Light Blue/Cyan)
-      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-brand-primary animate-bounce-soft"><path d="M4.5 16.5c-1.5 1.26-2 3.5-2 3.5s2.24-.5 3.5-2M15 9l-9 9m16-12c-2.5 0-5.5 1.5-7.5 3.5L5 13.5c-1.5 1.5-1.5 4 0 5.5s4 1.5 5.5 0L14 15.5c2-2 3.5-5 3.5-7.5m4.5-4.5c.5.5.5 1.5 0 2s-1.5 0-2 0m-3-1s.5.5.5 1.5"/></svg>`;
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-brand-primary animate-bounce-soft"><path d="M3 15h18v-2a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v2z" fill="#93C5FD" stroke="currentColor" /><path d="M7 10l3-4h4l3 4z" fill="white" stroke="currentColor" /><path d="M17 10h4v-3h-4z" fill="#60A5FA" stroke="currentColor" /><circle cx="7.5" cy="16.5" r="2" fill="#4B5563" stroke="currentColor" /><circle cx="7.5" cy="16.5" r="0.5" fill="white" /><circle cx="16.5" cy="16.5" r="2" fill="#4B5563" stroke="currentColor" /><circle cx="16.5" cy="16.5" r="0.5" fill="white" /></svg>`;
     } else {
-      // Heart SVG (Pink)
-      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-brand-primary animate-bounce-soft"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-brand-primary animate-bounce-soft"><path d="M9 13c0-3.5-1.5-6.5-1.5-6.5S7 4 8 3s2.5.5 2.5 2c0 2 .5 5.5 1.5 8" fill="white" stroke="currentColor"/><path d="M15 13c0-3.5 1.5-6.5 1.5-6.5s.5-2.5-.5-3.5-2.5.5-2.5 2c0 2-.5 5.5-1.5 8" fill="white" stroke="currentColor"/><path d="M5 17c0-2.5 2.5-3.5 7-3.5s7 1 7 3.5-2.5 3.5-7 3.5-7-1-7-3.5z" fill="white" stroke="currentColor"/><path d="M8.5 10c0-1.5-.7-3.5-.7-3.5s-.2-1 .2-1.5.8-.2.8.5-.2 2.5.2 4.5" fill="#FCA5A5"/><path d="M15.5 10c0-1.5.7-3.5.7-3.5s.2-1-.2-1.5-.8-.2-.8.5.2 2.5-.2 4.5" fill="#FCA5A5"/><circle cx="9.5" cy="16" r="0.8" fill="currentColor"/><circle cx="14.5" cy="16" r="0.8" fill="currentColor"/><polygon points="12,17 11,16 13,16" fill="#F87171" stroke="#F87171" stroke-width="0.5"/><path d="M11 18c.3.3.7.3 1 0s.7-.3 1 0" /></svg>`;
     }
   };
 
