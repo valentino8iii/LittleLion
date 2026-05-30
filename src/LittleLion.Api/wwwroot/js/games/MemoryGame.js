@@ -85,7 +85,7 @@ export class MemoryGame extends BaseGame {
       // Speak the word on the FIRST reveal of each item (no spam on re-flips)
       if (!spokenItemIds.has(cardDef.item.id)) {
         spokenItemIds.add(cardDef.item.id);
-        audio.speak(cardDef.item.word);
+        audio.speak(cardDef.item);
       } else {
         // Still play a soft tick so the tap feels responsive
         this.context.services.sfx.play('ding');

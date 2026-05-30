@@ -92,7 +92,7 @@ export class DragGame extends BaseGame {
         slotTile.removeAttribute('data-slot');
 
         this.context.services.sfx.play('ding');
-        audio.speak(item.word);
+        audio.speak(item);
         this.context.bus.emit('leo:cheer');
 
         this.stars = matched.size;
@@ -181,7 +181,7 @@ export class DragGame extends BaseGame {
           onclick: () => {
             // Skip if already matched - re-tapping a green chip stays silent
             if (chip.classList.contains('word-chip--used')) return;
-            audio.speak(item.word);
+            audio.speak(item);
           },
           onpointerdown: (e) => startDrag(e, wordId),
         }, [item.word]);

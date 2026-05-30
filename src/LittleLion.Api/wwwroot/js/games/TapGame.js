@@ -35,7 +35,7 @@ export class TapGame extends BaseGame {
     const { options, target } = this.pickOptions(n);
     let locked = false;
 
-    const playSound = () => audio.speak(target.word);
+    const playSound = () => audio.speak(target);
 
     let correctTile = null;
     const tiles = options.map((item, idx) => {
@@ -52,7 +52,7 @@ export class TapGame extends BaseGame {
             locked = true;
             tile.classList.add('!border-brand-green', '!bg-green-50', 'scale-105');
             this.context.services.sfx.play('ding');
-            audio.speak(item.word);
+            audio.speak(item);
             this.context.bus.emit('leo:cheer');
             this._showPraise(target.word);
             this.completeRound();

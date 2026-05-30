@@ -38,7 +38,7 @@ export class BalloonGame extends BaseGame {
     const promptBtn = el('button', {
       class: 'flex items-center justify-center gap-3 bg-brand-accent text-ink font-bold text-xl px-8 py-4 rounded-full shadow-card hover:-translate-y-1 active:translate-y-1 transition-all mx-auto w-fit mb-4',
       style: { marginBottom: '12px', position: 'relative', zIndex: '50' },
-      onclick: () => audio.speak(target.word),
+      onclick: () => audio.speak(target),
     }, [
       el('span', { class: 'text-2xl', style: { background: 'var(--color-pink)' } }, ['🔊']),
       el('span', {}, [`Pop the ${target.word.toLowerCase()}!`]),
@@ -78,7 +78,7 @@ export class BalloonGame extends BaseGame {
             this._spawnPartyBurst(balloon, field, item);
             balloon.classList.add('scale-150', 'opacity-0', 'pointer-events-none');
             this.context.services.sfx.play('pop');
-            audio.speak(item.word);
+            audio.speak(item);
             this.context.bus.emit('leo:cheer');
             const praise = el('div', { class: 'absolute top-4 left-1/2 -translate-x-1/2 bg-white px-8 py-4 rounded-full shadow-card text-2xl font-bold text-brand-purple animate-toast-enter z-[150] whitespace-nowrap' }, [`POP! ${target.word}! ✨`]);
             field.appendChild(praise);
@@ -108,7 +108,7 @@ export class BalloonGame extends BaseGame {
 
     this.bodyContainer.append(promptBtn, field);
 
-    setTimeout(() => audio.speak(target.word), 500);
+    setTimeout(() => audio.speak(target), 500);
     this.startRoundWatch(correctBalloon);
   }
 

@@ -11,7 +11,6 @@ public sealed class LocalAudioUrlFactory : IAudioUrlFactory
 {
     public string BuildUrl(string word)
     {
-        var fileName = word.ToLowerInvariant().Replace(" ", "-");
-        return $"/audio/{fileName}.mp3";
+        return $"/api/tts?text={Uri.EscapeDataString(word)}";
     }
 }

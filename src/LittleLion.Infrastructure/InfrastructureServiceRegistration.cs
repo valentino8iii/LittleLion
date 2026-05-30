@@ -29,6 +29,12 @@ public static class InfrastructureServiceRegistration
             configuration.GetSection(ProgressStorageOptions.SectionName));
         services.Configure<RewardCatalogOptions>(
             configuration.GetSection(RewardCatalogOptions.SectionName));
+        services.Configure<AzureSpeechOptions>(
+            configuration.GetSection(AzureSpeechOptions.SectionName));
+
+        // HttpClient and TTS
+        services.AddSingleton<System.Net.Http.HttpClient>();
+        services.AddSingleton<ITextToSpeechService, AzureTextToSpeechService>();
 
         // Lessons - singleton because lessons.json is static
         services.AddSingleton<ILessonRepository, JsonFileLessonRepository>();

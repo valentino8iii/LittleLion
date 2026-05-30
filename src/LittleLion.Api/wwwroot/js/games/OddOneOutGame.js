@@ -128,7 +128,7 @@ export class OddOneOutGame extends BaseGame {
             locked = true;
             tile.classList.add('!border-brand-green', '!bg-green-50', 'scale-105');
             this.context.services.sfx.play('ding');
-            audio.speak(item.word);
+            audio.speak(item);
             this.context.bus.emit('leo:cheer');
             this._showPraise(item.word);
             this.completeRound();
@@ -197,7 +197,7 @@ export class OddOneOutGame extends BaseGame {
             locked = true;
             tile.classList.add('!border-white', 'scale-105');
             this.context.services.sfx.play('ding');
-            audio.speak(item.word);
+            audio.speak(item);
             this.context.bus.emit('leo:cheer');
             this._showPraise(item.word);
             this.completeRound();
