@@ -34,12 +34,16 @@ function bootstrap() {
   const services = {
     audio:      new AudioService(),
     sfx:        new SoundEffectService(),
-    lessons:    new LessonService(api),
     progress:   new ProgressService(api, bus),
     media:      new MediaService(),
     rewards:    new RewardService(api),
     difficulty: new DifficultyService(bus),
   };
+  services.lessons = new LessonService(api, services.audio);
+
+  // Preload common UI audio strings to reduce latency during gameplay
+  services.audio.preload("It's OK, let's try again!", { rate: 0.9 });
+  services.audio.preload("Great job!");
 
   // Kick off initial loads in parallel - UI renders before these resolve
   services.progress.refresh();

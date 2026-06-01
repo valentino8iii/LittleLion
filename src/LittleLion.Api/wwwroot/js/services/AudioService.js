@@ -10,6 +10,7 @@ export class AudioService {
     this.synth = window.speechSynthesis;
     this.voice = null;
     this.currentAudio = null;
+    this.preloadCache = new Map(); // url -> Audio
     this._warmUpVoice();
   }
 
@@ -24,6 +25,39 @@ export class AudioService {
     };
     pick();
     this.synth.onvoiceschanged = pick;
+  }
+
+  /** Preload the given text or vocabulary item's audio in the background. */
+  preload(textOrItem, options = {}) {
+    let text = '';
+    if (typeof textOrItem === 'string') {
+      text = textOrItem;
+    } else if (textOrItem && typeof textOrItem === 'object') {
+      const age8Mode = localStorage.getItem('littlelion_age8mode') !== 'false';
+      text = (age8Mode && textOrItem.audioTranscript) 
+        ? textOrItem.audioTranscript 
+        : textOrItem.word;
+    }
+
+    if (!text) return;
+
+    let rate = 0.80;
+    let pitch = 1.45;
+
+    if (typeof options === 'number') {
+      rate = options;
+    } else if (options && typeof options === 'object') {
+      if (options.rate !== undefined) rate = options.rate;
+      if (options.pitch !== undefined) pitch = options.pitch;
+    }
+
+    const url = `/api/tts?text=${encodeURIComponent(text)}&rate=${rate}&pitch=${pitch}`;
+    if (this.preloadCache.has(url)) return;
+
+    const audio = new Audio();
+    audio.preload = 'auto';
+    audio.src = url;
+    this.preloadCache.set(url, audio);
   }
 
   /** Speak the given text or vocabulary item. Cancels any in-flight utterance. */
@@ -61,7 +95,14 @@ export class AudioService {
     }
 
     const url = `/api/tts?text=${encodeURIComponent(text)}&rate=${rate}&pitch=${pitch}`;
-    const audio = new Audio(url);
+    
+    let audio;
+    if (this.preloadCache.has(url)) {
+      audio = this.preloadCache.get(url);
+      audio.currentTime = 0;
+    } else {
+      audio = new Audio(url);
+    }
     this.currentAudio = audio;
 
     let fallbackTriggered = false;
